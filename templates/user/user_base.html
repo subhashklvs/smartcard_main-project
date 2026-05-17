@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartCart{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- User Navbar -->
+    <nav class="navbar glass-effect">
+        <div class="nav-container">
+            <a href="/" class="brand">
+                <i class="ph-fill ph-shopping-cart"></i> SmartCart
+            </a>
+            <div class="nav-links">
+                {% if session.get('user_id') %}
+                    <a href="/user-dashboard" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
+                    <a href="/user/products" class="nav-link"><i class="ph ph-bag"></i> View Products</a>
+                    <a href="/user/cart" class="nav-link"><i class="ph ph-shopping-cart"></i> Cart Items</a>
+                    <a href="/user/profile" class="nav-link"><i class="ph ph-user"></i> Profile</a>
+                    <div class="nav-divider"></div>
+                    <a href="/user-logout" class="btn btn-danger-outline"><i class="ph ph-sign-out"></i> Logout</a>
+                {% else %}
+                    <a href="/admin-home" class="nav-link"><i class="ph ph-house"></i> Home</a>
+                    <a href="/about" class="nav-link"><i class="ph ph-info"></i> About</a>
+                    <a href="/contact" class="nav-link"><i class="ph ph-envelope"></i> Contact</a>
+                    <a href="/user-login" class="nav-link">Login</a>
+                    <a href="/user-register" class="btn btn-primary">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Flash Messages -->
+        <div class="flash-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} fade-in">
+                            {% if category == 'success' %}
+                                <i class="ph-fill ph-check-circle"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                                <i class="ph-fill ph-warning-circle"></i>
+                            {% else %}
+                                <i class="ph-fill ph-info"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="page-container fade-in-up">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 SmartCart | Shop Smarter, Not Harder <i class="ph-fill ph-heart" style="color: var(--danger);"></i></p>
+    </footer>
+
+    <script>
+        // Auto-hide flash messages
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var flashMessages = document.querySelectorAll('.alert');
+                flashMessages.forEach(function(message) {
+                    message.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-10px)';
+                    setTimeout(function() { message.remove(); }, 500);
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

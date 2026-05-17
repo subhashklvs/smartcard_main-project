@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+
+{% block title %}About - NotesApp{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 40px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; background: var(--accent-secondary); padding: 15px 20px; border-radius: 12px 12px 0 0; margin: -30px -30px 30px -30px;">
+        <i class="ph ph-info" style="font-size: 1.5rem; color: white;"></i>
+        <h3 style="margin: 0; color: white; font-size: 1.2rem;">About NotesApp</h3>
+    </div>
+    
+    <h2 style="font-size: 1.8rem; font-weight: 400; color: var(--text-main); margin-bottom: 15px; text-shadow: none;">Simple & Powerful Notes Management System</h2>
+    
+    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; font-size: 1rem;">
+        NotesApp is a modern web application built using Flask and SQLite. It helps users create, manage, update, search, and organize their notes efficiently.
+    </p>
+    
+    <hr style="border: none; border-top: 1px solid var(--glass-border); margin: 30px 0;">
+    
+    <h3 style="font-size: 1.4rem; font-weight: 400; margin-bottom: 20px;">Features</h3>
+    
+    <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted);">
+        <li style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 10px;">
+            <i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> User Registration & Login
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 10px;">
+            <i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> Create, Update & Delete Notes
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 10px;">
+            <i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> Search Notes Functionality
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 10px;">
+            <i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> Secure Password Hashing
+        </li>
+        <li style="padding: 12px 0; display: flex; align-items: center; gap: 10px;">
+            <i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> Responsive Bootstrap UI
+        </li>
+    </ul>
+    
+    <hr style="border: none; border-top: 1px solid var(--glass-border); margin: 30px 0;">
+    
+    <h3 style="font-size: 1.4rem; font-weight: 400; margin-bottom: 20px;">Technologies Used</h3>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;">
+        <span style="background: #3b82f6; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">Python</span>
+        <span style="background: #000000; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">Flask</span>
+        <span style="background: #10b981; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">SQLite</span>
+        <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">HTML</span>
+        <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">CSS</span>
+        <span style="background: #0ea5e9; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">Bootstrap 5</span>
+    </div>
+    
+    <hr style="border: none; border-top: 1px solid var(--glass-border); margin: 30px 0;">
+    
+    <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Developed by <strong style="color: var(--text-main); font-weight: 600;">Subhashklvs</strong>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends "admin/base.html" %}
+{% block title %}SmartCart - Next Gen E-Commerce Management{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        position: relative;
+        text-align: center;
+        padding: 80px 20px;
+        overflow: hidden;
+    }
+    
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        color: #c4b5fd;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        animation: fadeInDown 0.6s ease-out;
+    }
+    
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #ffffff 20%, #a78bfa 50%, #60a5fa 80%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #94a3b8;
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        line-height: 1.6;
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    .hero-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        animation: fadeInUp 1.2s ease-out;
+    }
+    
+    .btn-glow {
+        padding: 14px 32px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent-primary), #3b82f6);
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .btn-glow:hover {
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+        transform: translateY(-3px);
+        color: white;
+    }
+    
+    .btn-outline {
+        padding: 14px 32px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-3px);
+        color: white;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+        animation: fadeInUp 1.4s ease-out;
+    }
+    
+    .feature-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: left;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card:hover {
+        background: rgba(30, 41, 59, 0.8);
+        border-color: rgba(139, 92, 246, 0.3);
+        transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .icon-blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+    .icon-purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
+    .icon-emerald { background: rgba(16, 185, 129, 0.1); color: #34d399; }
+    
+    .feature-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+        color: white;
+    }
+    
+    .feature-card p {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-badge">
+        <i class="ph-fill ph-sparkle"></i> Introducing SmartCart 2.0
+    </div>
+    
+    <h1 class="hero-title">Manage Your Digital<br>Empire Effortlessly</h1>
+    
+    <p class="hero-subtitle">
+        The ultimate control panel for your e-commerce platform. Oversee products, analyze sales, and manage customers through a beautiful, lightning-fast dashboard.
+    </p>
+    
+    <div class="hero-actions">
+        {% if session.get('admin_id') %}
+            <a href="/admin-dashboard" class="btn-glow">
+                Enter Dashboard <i class="ph-bold ph-arrow-right"></i>
+            </a>
+        {% else %}
+            <a href="/admin-signup" class="btn-glow">
+                Start Selling Free <i class="ph-bold ph-rocket-launch"></i>
+            </a>
+            <a href="/admin-login" class="btn-outline">
+                <i class="ph-bold ph-sign-in"></i> Admin Login
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon icon-purple">
+            <i class="ph-fill ph-shopping-bag"></i>
+        </div>
+        <h3>Seamless Inventory</h3>
+        <p>Instantly add, update, and track thousands of products across your digital storefront with real-time analytics and alerts.</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon icon-blue">
+            <i class="ph-fill ph-currency-dollar"></i>
+        </div>
+        <h3>Secure Transactions</h3>
+        <p>Built with bank-grade encryption to ensure your customers' payments and personal data remain absolutely secure at all times.</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon icon-emerald">
+            <i class="ph-fill ph-chart-line-up"></i>
+        </div>
+        <h3>Sales Analytics</h3>
+        <p>Access deep insights and interactive charts to monitor your e-commerce growth, customer behavior, and peak shopping trends.</p>
+    </div>
+</div>
+{% endblock %}

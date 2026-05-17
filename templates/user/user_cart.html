@@ -1,0 +1,14 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}My Cart - SmartCart{% endblock %}
+
+{% block content %}
+<div class="card glass-effect" style="text-align: center; padding: 60px;">
+    <i class="ph ph-shopping-cart" style="font-size: 5rem; color: var(--accent-primary); margin-bottom: 20px; display: block;"></i>
+    <h1 style="margin-bottom: 10px;">Your Cart is Empty</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;">Looks like you haven't added anything to your cart yet.</p>
+    <a href="/user/products" class="btn btn-primary" style="padding: 15px 30px;">
+        <i class="ph ph-bag"></i> Start Shopping
+    </a>
+</div>
+{% endblock %}

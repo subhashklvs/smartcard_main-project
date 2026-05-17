@@ -1,0 +1,43 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}My Profile - SmartCart{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card glass-effect">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <i class="ph-fill ph-user-circle" style="font-size: 6rem; color: var(--accent-primary);"></i>
+            <h1 style="margin-top: 10px;">{{ user.name }}</h1>
+            <p style="color: var(--text-muted);">Member since 2026</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
+                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Full Name</label>
+                <div style="font-size: 1.1rem; font-weight: 500;">{{ user.name }}</div>
+            </div>
+
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
+                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Email Address</label>
+                <div style="font-size: 1.1rem; font-weight: 500;">{{ user.email }}</div>
+            </div>
+
+            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
+                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Account Status</label>
+                <div style="font-size: 1.1rem; font-weight: 500; color: var(--success); display: flex; align-items: center; gap: 8px;">
+                    <i class="ph-fill ph-check-circle"></i> Active
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; display: flex; gap: 15px;">
+            <button class="btn btn-secondary" style="flex: 1;">
+                <i class="ph ph-note-pencil"></i> Edit Profile
+            </button>
+            <a href="/user-logout" class="btn btn-danger-outline" style="flex: 1;">
+                <i class="ph ph-sign-out"></i> Logout
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

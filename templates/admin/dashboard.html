@@ -1,29 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-</head>
-<body>
+{% extends "admin/base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="fade-in-up">
+    <h2>Welcome, <span style="color: var(--accent-primary);">{{ admin_name }}</span></h2>
+    <p class="mb-4">This is your admin dashboard. Use the quick links below to manage your system.</p>
 
-<!-- Flash messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p style="color:green;">{{ message }}</p>
-  {% endfor %}
-{% endwith %}
+    <div class="dashboard-grid">
+        <a href="/admin/item-list" class="card stat-card">
+            <i class="ph-fill ph-list-numbers"></i>
+            <h3>View All Products</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Manage inventory and product details.</p>
+        </a>
 
-<h2>Welcome, {{ admin_name }}</h2>
+        <a href="/admin/add-item" class="card stat-card">
+            <i class="ph-fill ph-plus-circle"></i>
+            <h3>Add Product</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Quickly insert a new item to your store.</p>
+        </a>
 
-<!-- Links -->
-<a href="/admin/add-item">Add Product</a>
-<br><br>
-
-<!-- Logout Button -->
-<a href="/admin-logout">Logout</a>
-
-<p>This is your admin dashboard.</p>
-<a href="/admin/item-list">View All Products</a>
-<br><br>
-<a href="/admin/profile">Edit Profile</a>
-</body>
-</html>
+        <a href="/admin/profile" class="card stat-card">
+            <i class="ph-fill ph-user-gear"></i>
+            <h3>Edit Profile</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Update your admin credentials & image.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

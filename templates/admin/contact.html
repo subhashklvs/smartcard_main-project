@@ -1,0 +1,78 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Contact Us - SmartCart{% endblock %}
+
+{% block content %}
+<style>
+    .contact-card {
+        max-width: 350px;
+        margin: 40px auto;
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 25px 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    .contact-form-group {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+    }
+    .contact-form-group label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+    }
+    .contact-form-group input, 
+    .contact-form-group textarea {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        color: white;
+    }
+    .contact-form-group input:focus,
+    .contact-form-group textarea:focus {
+        border-color: var(--accent-primary);
+        outline: none;
+    }
+    .contact-form-group textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+</style>
+
+<div class="contact-card fade-in-up">
+    <div style="text-align: center; margin-bottom: 15px;">
+        <i class="ph-fill ph-envelope-simple" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: 5px;"></i>
+        <h2 style="font-size: 1.4rem; margin:0;">Contact Us</h2>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top:5px;">Send us a message below.</p>
+    </div>
+
+    <form action="/contact" method="POST" style="gap: 0;">
+        <div class="contact-form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
+        </div>
+        <div class="contact-form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+        <div class="contact-form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required placeholder="What is this about?">
+        </div>
+        <div class="contact-form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Write your message here..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%; border-radius: 10px; padding: 10px; font-size: 0.95rem;">
+            <i class="ph-bold ph-paper-plane-right"></i> Send Message
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -1,30 +1,130 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Login</title>
-</head>
-<body>
+{% extends "admin/base.html" %}
+{% block title %}Admin Login{% endblock %}
 
-<h2>Admin Login</h2>
+{% block content %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+        position: relative;
+    }
+    .auth-blob-1 {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+        top: -50px;
+        left: 20%;
+        opacity: 0.5;
+        filter: blur(50px);
+        z-index: 0;
+        animation: float 6s infinite ease-in-out;
+    }
+    .auth-blob-2 {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--accent-secondary) 0%, transparent 70%);
+        bottom: -100px;
+        right: 20%;
+        opacity: 0.4;
+        filter: blur(60px);
+        z-index: 0;
+        animation: float 8s infinite ease-in-out reverse;
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        position: relative;
+        z-index: 1;
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .auth-header i {
+        font-size: 3rem;
+        color: var(--accent-primary);
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .input-group i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 1.2rem;
+    }
+    .input-group input {
+        padding-left: 45px;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .input-group input:focus {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: var(--accent-primary);
+    }
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+    .auth-footer a {
+        color: var(--accent-primary);
+        font-weight: 600;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-20px) scale(1.05); }
+    }
+</style>
 
-<!-- Flash messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-  {% endfor %}
-{% endwith %}
-
-<form method="POST" action="/admin-login">
+<div class="auth-wrapper fade-in-up">
+    <div class="auth-blob-1"></div>
+    <div class="auth-blob-2"></div>
     
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
-
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
-
-    <button type="submit">Login</button>
-
-</form>
-
-</body>
-</html>
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="ph-fill ph-user-circle"></i>
+            <h2 style="margin: 0; font-size: 1.8rem;">Welcome Back</h2>
+            <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Please enter your details to sign in.</p>
+        </div>
+        
+        <form method="POST" action="/admin-login">
+            <div class="input-group">
+                <i class="ph ph-envelope-simple"></i>
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="ph ph-lock-key"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 12px; padding: 12px; font-size: 1rem; margin-top: 10px;">
+                Sign In
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            Don't have an account? <a href="/admin-signup">Sign up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

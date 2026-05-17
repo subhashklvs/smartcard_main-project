@@ -1,46 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Profile</title>
-</head>
-<body>
+{% extends "admin/base.html" %}
+{% block title %}Admin Profile{% endblock %}
+{% block content %}
+<div class="card fade-in-up" style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <h2>Admin Profile</h2>
 
-<h2>Admin Profile</h2>
+    <div class="mb-4 mt-4">
+        {% if admin.profile_image %}
+            <img src="/static/uploads/admin_profiles/{{ admin.profile_image }}" 
+                 width="120" height="120" style="border-radius:50%; border: 3px solid var(--accent-primary); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">
+        {% else %}
+            <div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid var(--glass-border);">
+                <i class="ph ph-user" style="font-size: 3rem; color: var(--text-muted);"></i>
+            </div>
+        {% endif %}
+    </div>
 
-<!-- Flash Messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p style="color:green;">{{ message }}</p>
-  {% endfor %}
-{% endwith %}
-
-<!-- Current Profile Image -->
-{% if admin.profile_image %}
-    <img src="/static/uploads/admin_profiles/{{ admin.profile_image }}" 
-         width="120" height="120" style="border-radius:50%;"><br><br>
-{% else %}
-    <p>No Profile Image</p>
-{% endif %}
-
-<form method="POST" action="/admin/profile" enctype="multipart/form-data">
-
-    <label>Name:</label><br>
-    <input type="text" name="name" value="{{ admin.name }}" required><br><br>
-
-    <label>Email:</label><br>
-    <input type="email" name="email" value="{{ admin.email }}" required><br><br>
-
-    <label>New Password (optional):</label><br>
-    <input type="password" name="password"><br><br>
-
-    <label>Upload New Profile Image (optional):</label><br>
-    <input type="file" name="profile_image" accept="image/*"><br><br>
-
-    <button type="submit">Update Profile</button>
-</form>
-
-<br>
-<a href="/admin-dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+    <form method="POST" action="/admin/profile" enctype="multipart/form-data" style="text-align: left;">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="{{ admin.name }}" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="{{ admin.email }}" required>
+        </div>
+        <div>
+            <label>New Password (optional):</label>
+            <input type="password" name="password" placeholder="Leave blank to keep current">
+        </div>
+        <div>
+            <label>Upload New Profile Image (optional):</label>
+            <input type="file" name="profile_image" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary mt-4" style="width: 100%;">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

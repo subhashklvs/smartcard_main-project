@@ -1,28 +1,131 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Signup</title>
-</head>
-<body>
+{% extends "admin/base.html" %}
+{% block title %}Admin Signup{% endblock %}
 
-<h2>Admin Registration</h2>
+{% block content %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+        position: relative;
+    }
+    .auth-blob-1 {
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+        top: -20px;
+        right: 10%;
+        opacity: 0.4;
+        filter: blur(60px);
+        z-index: 0;
+        animation: float 7s infinite ease-in-out;
+    }
+    .auth-blob-2 {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+        bottom: -50px;
+        left: 15%;
+        opacity: 0.3;
+        filter: blur(50px);
+        z-index: 0;
+        animation: float 9s infinite ease-in-out reverse;
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        z-index: 1;
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .auth-header i {
+        font-size: 3rem;
+        color: #3b82f6;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .input-group i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 1.2rem;
+    }
+    .input-group input {
+        padding-left: 45px;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .input-group input:focus {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+    .auth-footer a {
+        color: #3b82f6;
+        font-weight: 600;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-20px) scale(1.05); }
+    }
+</style>
 
-<!-- Flash messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-  {% endfor %}
-{% endwith %}
-
-<form method="POST" action="/admin-signup">
-    <label>Name:</label><br>
-    <input type="text" name="name" required><br><br>
-
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
-
-    <button type="submit">Send OTP</button>
-</form>
-
-</body>
-</html>
+<div class="auth-wrapper fade-in-up">
+    <div class="auth-blob-1"></div>
+    <div class="auth-blob-2"></div>
+    
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="ph-fill ph-user-plus"></i>
+            <h2 style="margin: 0; font-size: 1.8rem;">Create Account</h2>
+            <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Register for a new admin profile.</p>
+        </div>
+        
+        <form method="POST" action="/admin-signup">
+            <div class="input-group">
+                <i class="ph ph-user"></i>
+                <input type="text" name="name" placeholder="Full Name" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="ph ph-envelope-simple"></i>
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 12px; padding: 12px; font-size: 1rem; margin-top: 10px; background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                Send OTP
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            Already have an account? <a href="/admin-login">Sign in</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

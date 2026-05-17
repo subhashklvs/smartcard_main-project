@@ -1,28 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Verify OTP</title>
-</head>
-<body>
-
-<h2>Verify OTP</h2>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-  {% endfor %}
-{% endwith %}
-
-<form method="POST" action="/verify-otp">
-
-    <label>Enter OTP:</label><br>
-    <input type="text" name="otp" required><br><br>
-
-    <label>Create Password:</label><br>
-    <input type="password" name="password" required><br><br>
-
-    <button type="submit">Verify & Register</button>
-</form>
-
-</body>
-</html>
+{% extends "admin/base.html" %}
+{% block title %}Verify OTP{% endblock %}
+{% block content %}
+<div class="auth-box card fade-in-up">
+    <h2>Verify OTP</h2>
+    <form method="POST" action="/verify-otp">
+        <div>
+            <label>Enter OTP:</label>
+            <input type="text" name="otp" required>
+        </div>
+        <div>
+            <label>Create Password:</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Verify & Register</button>
+    </form>
+</div>
+{% endblock %}

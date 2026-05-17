@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartCart Admin{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Phosphor Icons for premium aesthetic -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- Dynamic Navbar -->
+    <nav class="navbar glass-effect">
+        <div class="nav-container">
+            <a href="/admin-dashboard" class="brand">
+                <i class="ph-fill ph-shopping-cart"></i> SmartCart
+            </a>
+            <div class="nav-links">
+                {% if session.get('admin_id') %}
+                    <a href="/admin-dashboard" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
+                    <a href="/admin/item-list" class="nav-link"><i class="ph ph-list-dashes"></i> Products</a>
+                    <a href="/admin/add-item" class="nav-link"><i class="ph ph-plus-circle"></i> Add Item</a>
+                    <div class="nav-divider"></div>
+                    <a href="/admin/profile" class="nav-link profile-link">
+                        <i class="ph ph-user-circle"></i> {{ session.get('admin_name', 'Profile') }}
+                    </a>
+                    <a href="/admin-logout" class="btn btn-danger-outline"><i class="ph ph-sign-out"></i> Logout</a>
+                {% else %}
+                    <a href="/admin-home" class="nav-link"><i class="ph ph-house"></i> Home</a>
+                    <a href="/about" class="nav-link"><i class="ph ph-info"></i> About</a>
+                    <a href="/contact" class="nav-link"><i class="ph ph-envelope"></i> Contact</a>
+                    <div class="nav-divider"></div>
+                    <a href="/admin-login" class="nav-link">Login</a>
+                    <a href="/admin-signup" class="btn btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Flash Messages -->
+        <div class="flash-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} fade-in">
+                            {% if category == 'success' %}
+                                <i class="ph-fill ph-check-circle"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                                <i class="ph-fill ph-warning-circle"></i>
+                            {% else %}
+                                <i class="ph-fill ph-info"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Injected Content -->
+        <div class="page-container fade-in-up">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 SmartCart Admin Dashboard | Designed with <i class="ph-fill ph-heart"></i></p>
+    </footer>
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var flashMessages = document.querySelectorAll('.alert');
+                flashMessages.forEach(function(message) {
+                    message.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-10px)';
+                    
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

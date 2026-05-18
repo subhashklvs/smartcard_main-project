@@ -24,14 +24,14 @@
             </a>
             <div class="nav-links">
                 {% if session.get('user_id') %}
-                    <a href="/user-dashboard" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
+                    <a href="/user-home" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
                     <a href="/user/products" class="nav-link"><i class="ph ph-bag"></i> View Products</a>
                     <a href="/user/cart" class="nav-link"><i class="ph ph-shopping-cart"></i> Cart Items</a>
                     <a href="/user/profile" class="nav-link"><i class="ph ph-user"></i> Profile</a>
                     <div class="nav-divider"></div>
                     <a href="/user-logout" class="btn btn-danger-outline"><i class="ph ph-sign-out"></i> Logout</a>
                 {% else %}
-                    <a href="/admin-home" class="nav-link"><i class="ph ph-house"></i> Home</a>
+                    <a href="/user-login" class="nav-link"><i class="ph ph-house"></i> Home</a>
                     <a href="/about" class="nav-link"><i class="ph ph-info"></i> About</a>
                     <a href="/contact" class="nav-link"><i class="ph ph-envelope"></i> Contact</a>
                     <a href="/user-login" class="nav-link">Login</a>

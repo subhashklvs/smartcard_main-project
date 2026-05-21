@@ -17,3 +17,8 @@ MAIL_PORT = 587
 MAIL_USE_TLS = True
 MAIL_USERNAME = 'subhashklvs@gmail.com'
 MAIL_PASSWORD = 'mgag ipub jomn ezxu'   # Gmail App Password
+
+# Razorpay API Credentials
+RAZORPAY_KEY_ID = "rzp_test_Sr7QtTyAxFdlQu"
+RAZORPAY_KEY_SECRET = "KwO8jHEf8X6OWtFdysqXAFfC"
+

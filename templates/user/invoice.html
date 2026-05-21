@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice - SmartCart</title>
+    <style>
+        @page {
+            size: a4;
+            margin: 2cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #333333;
+            line-height: 1.5;
+        }
+        .invoice-box {
+            width: 100%;
+        }
+        .header-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .header-left {
+            text-align: left;
+            vertical-align: top;
+        }
+        .header-right {
+            text-align: right;
+            vertical-align: top;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #6366f1; /* Indigo color for SmartCart */
+            margin-bottom: 5px;
+        }
+        .company-details {
+            color: #666;
+            font-size: 11px;
+        }
+        .invoice-title {
+            font-size: 32px;
+            color: #333;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .invoice-meta {
+            font-size: 11px;
+            color: #666;
+        }
+        .customer-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .customer-details {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid #6366f1;
+        }
+        .customer-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .items-table th {
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #cbd5e1;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+        .text-center {
+            text-align: center !important;
+        }
+        .total-wrapper {
+            width: 100%;
+        }
+        .total-table {
+            width: 40%;
+            float: right;
+            border-collapse: collapse;
+        }
+        .total-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .total-label {
+            font-weight: bold;
+            color: #334155;
+        }
+        .total-value {
+            text-align: right;
+            color: #333;
+        }
+        .grand-total {
+            background-color: #6366f1;
+        }
+        .grand-total-label {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .grand-total-val {
+            text-align: right;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 10px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+    <!-- Header Section -->
+    <table class="header-table">
+        <tr>
+            <td class="header-left">
+                <div class="logo">SmartCart</div>
+                <div class="company-details">
+                    123 Smart Avenue, Tech City<br>
+                    State, Zip Code 12345<br>
+                    support@smartcart.com<br>
+                    +1 234 567 8900
+                </div>
+            </td>
+            <td class="header-right">
+                <div class="invoice-title">INVOICE</div>
+                <div class="invoice-meta">
+                    <strong>Invoice #:</strong> INV-{{ order.order_id }}<br>
+                    <strong>Date:</strong> {{ order.created_at.strftime('%B %d, %Y') if order.created_at and order.created_at.__class__.__name__ == 'datetime' else order.created_at }}<br>
+                    <strong>Status:</strong> <span style="color: #10b981; font-weight: bold;">PAID</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Customer Section -->
+    <table class="customer-table">
+        <tr>
+            <td width="50%">
+                <div class="customer-details">
+                    <div class="customer-title">Billed To:</div>
+                    <strong>User ID:</strong> {{ order.user_id }}<br>
+                    SmartCart Customer<br>
+                    Payment Ref: {{ order.razorpay_payment_id }}
+                </div>
+            </td>
+            <td width="50%" style="padding-left: 15px;">
+                {% if order.shipping_address %}
+                <div class="customer-details">
+                    <div class="customer-title">Shipped To:</div>
+                    {{ order.shipping_address.replace('\n', '<br>') | safe }}
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <!-- Items Section -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th width="50%">Product Description</th>
+                <th width="15%" class="text-center">Qty</th>
+                <th width="15%" class="text-right">Price</th>
+                <th width="20%" class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for it in items %}
+            <tr>
+                <td>{{ it.product_name }}</td>
+                <td class="text-center">{{ it.quantity }}</td>
+                <td class="text-right">₹{{ "%.2f"|format(it.price) }}</td>
+                <td class="text-right">₹{{ "%.2f"|format(it.price * it.quantity) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Totals Section -->
+    <div class="total-wrapper">
+        <table class="total-table">
+            <tr>
+                <td class="total-label">Subtotal</td>
+                <td class="total-value">₹{{ "%.2f"|format(order.amount) }}</td>
+            </tr>
+            <tr>
+                <td class="total-label">Tax (0%)</td>
+                <td class="total-value">₹0.00</td>
+            </tr>
+            <tr class="grand-total">
+                <td class="grand-total-label">Grand Total</td>
+                <td class="grand-total-val">₹{{ "%.2f"|format(order.amount) }}</td>
+            </tr>
+        </table>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Thank you for shopping with SmartCart! If you have any questions about this invoice, please contact support.
+    </div>
+</div>
+
+</body>
+</html>

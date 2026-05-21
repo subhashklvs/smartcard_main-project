@@ -1,43 +1,191 @@
 {% extends "user/user_base.html" %}
 
-{% block title %}My Profile - SmartCart{% endblock %}
+{% block title %}Profile Management - SmartCart{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <div class="card glass-effect">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <i class="ph-fill ph-user-circle" style="font-size: 6rem; color: var(--accent-primary);"></i>
-            <h1 style="margin-top: 10px;">{{ user.name }}</h1>
-            <p style="color: var(--text-muted);">Member since 2026</p>
-        </div>
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    
+    .profile-top-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 2fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 25px;
+    }
+    
+    .dashed-card {
+        border: 1.5px dashed rgba(13, 110, 253, 0.3);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 35px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
 
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
-                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Full Name</label>
-                <div style="font-size: 1.1rem; font-weight: 500;">{{ user.name }}</div>
+    .form-fields-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.25s ease;
+    }
+
+    .custom-input:focus {
+        border-color: #0d6efd;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    .icon-square {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(13, 110, 253, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+
+    .choose-img-btn {
+        background: #0d6efd;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        border: none;
+        transition: background 0.2s;
+    }
+
+    .choose-img-btn:hover {
+        background: #0b5ed7;
+    }
+
+    @media (max-width: 768px) {
+        .profile-top-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <!-- Header Title -->
+    <div style="margin-bottom: 30px;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.5px;">Profile Management</h2>
+        <p style="color: var(--text-muted); font-size: 1rem; margin: 0;">Update your personal details, password, and profile image below.</p>
+    </div>
+
+    <!-- Main Profile Edit Form -->
+    <form action="/user/profile" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 25px;">
+        
+        <!-- Top Section Grid -->
+        <div class="profile-top-grid">
+            
+            <!-- Left Side: User Info Dashed Card -->
+            <div class="dashed-card">
+                {% if user.profile_image %}
+                    <div style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; border: 4px solid rgba(13, 110, 253, 0.2); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: rgba(255,255,255,0.05);">
+                        <img src="/static/uploads/user_profiles/{{ user.profile_image }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                {% else %}
+                    <div style="width: 140px; height: 140px; border-radius: 50%; background: rgba(13, 110, 253, 0.1); border: 4px solid rgba(13, 110, 253, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                        <i class="ph ph-user" style="font-size: 4.5rem; color: #0d6efd;"></i>
+                    </div>
+                {% endif %}
+                <h3 style="font-size: 1.45rem; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.3px;">{{ user.name }}</h3>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin: 0;">{{ user.email }}</p>
             </div>
 
-            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
-                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Email Address</label>
-                <div style="font-size: 1.1rem; font-weight: 500;">{{ user.email }}</div>
-            </div>
+            <!-- Right Side: Name, Email & Password Form Inputs -->
+            <div class="form-fields-container">
+                <!-- Name -->
+                <div>
+                    <label for="name-input" style="display: block; font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 8px;">Name</label>
+                    <input type="text" id="name-input" name="name" value="{{ user.name }}" required class="custom-input">
+                </div>
 
-            <div style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);">
-                <label style="display: block; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;">Account Status</label>
-                <div style="font-size: 1.1rem; font-weight: 500; color: var(--success); display: flex; align-items: center; gap: 8px;">
-                    <i class="ph-fill ph-check-circle"></i> Active
+                <!-- Email -->
+                <div>
+                    <label for="email-input" style="display: block; font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 8px;">Email</label>
+                    <input type="email" id="email-input" name="email" value="{{ user.email }}" required class="custom-input">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password-input" style="display: block; font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 8px;">New Password</label>
+                    <input type="password" id="password-input" name="password" placeholder="Leave blank if you do not want to change password" class="custom-input">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; margin-left: 2px;">Keep this empty if you want to retain your current password.</p>
                 </div>
             </div>
+
         </div>
 
-        <div style="margin-top: 40px; display: flex; gap: 15px;">
-            <button class="btn btn-secondary" style="flex: 1;">
-                <i class="ph ph-note-pencil"></i> Edit Profile
-            </button>
-            <a href="/user-logout" class="btn btn-danger-outline" style="flex: 1;">
-                <i class="ph ph-sign-out"></i> Logout
-            </a>
+        <!-- Bottom Section: Upload Image Dashed Card -->
+        <div class="dashed-card" style="padding: 30px; gap: 20px;">
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div class="icon-square">
+                    <i class="ph ph-cloud-arrow-up" style="font-size: 1.4rem; color: #0d6efd;"></i>
+                </div>
+                <span style="font-size: 1.15rem; font-weight: 600; color: #fff; letter-spacing: -0.2px;">Upload Profile Image</span>
+            </div>
+
+            <!-- Custom File Input Uploader Bar -->
+            <div style="width: 100%; max-width: 550px; position: relative;">
+                <div style="display: flex; align-items: center; border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(0,0,0,0.25); overflow: hidden; padding: 6px;">
+                    <label for="image-upload" class="choose-img-btn">
+                        <i class="ph ph-cloud-arrow-up" style="font-size: 1.1rem;"></i> Choose Image
+                    </label>
+                    <span id="file-name" style="color: var(--text-muted); font-size: 0.9rem; margin-left: 15px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">No file chosen</span>
+                </div>
+                <input type="file" id="image-upload" name="profile_image" accept="image/*" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;"
+                       onchange="document.getElementById('file-name').innerText = this.files.length > 0 ? this.files[0].name : 'No file chosen';">
+            </div>
+            
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Upload JPG/PNG image. Leave empty to keep existing image.</p>
         </div>
-    </div>
+
+        <!-- Buttons Row (Footer) -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <!-- Back to Dashboard -->
+            <a href="/user-home" class="btn btn-secondary" style="padding: 12px 24px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: all 0.2s;"
+               onmouseover="this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.background='rgba(255,255,255,0.05)';">
+                <i class="ph ph-arrow-left" style="font-size: 1.1rem;"></i> Back to Dashboard
+            </a>
+            
+            <!-- Update Profile -->
+            <button type="submit" class="btn btn-primary" style="padding: 12px 28px; border-radius: 12px; background: #0d6efd; border: none; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: background 0.2s;"
+                    onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                <i class="ph ph-checks" style="font-size: 1.1rem;"></i> Update Profile
+            </button>
+        </div>
+
+    </form>
 </div>
 {% endblock %}

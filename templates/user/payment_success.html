@@ -1,0 +1,171 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}Payment Successful - SmartCart{% endblock %}
+
+{% block content %}
+<style>
+    .success-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .success-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .check-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(25, 135, 84, 0.15);
+        border: 3px solid #198754;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #198754;
+        font-size: 3rem;
+        margin-bottom: 25px;
+        box-shadow: 0 0 20px rgba(25, 135, 84, 0.3);
+        animation: pulseSuccess 2s infinite alternate;
+    }
+
+    @keyframes pulseSuccess {
+        0% { transform: scale(1); box-shadow: 0 0 15px rgba(25, 135, 84, 0.3); }
+        100% { transform: scale(1.05); box-shadow: 0 0 30px rgba(25, 135, 84, 0.5); }
+    }
+
+    .success-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #198754;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .success-subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+
+    .receipt-box {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 35px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+    .receipt-label {
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .receipt-value {
+        color: #ffffff;
+        font-weight: 600;
+        font-family: 'Courier New', Courier, monospace;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .status-badge {
+        background: rgba(25, 135, 84, 0.15);
+        color: #198754;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1.5px solid #198754;
+    }
+
+    .shop-btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        background: #0d6efd;
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.05rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .shop-btn:hover {
+        background: #0b5ed7;
+    }
+</style>
+
+<div class="success-container">
+    <div class="success-card">
+        
+        <!-- Success Animated Check Circle -->
+        <div class="check-circle">
+            <i class="ph ph-check-bold" style="font-weight: bold;"></i>
+        </div>
+
+        <!-- Headers -->
+        <h2 class="success-title">Payment Successful!</h2>
+        <p class="success-subtitle">Thank you for your purchase. Your transaction has been completed successfully and your order is being processed.</p>
+
+        <!-- Detailed Receipt -->
+        <div class="receipt-box">
+            <div class="receipt-row">
+                <span class="receipt-label">Payment Status</span>
+                <span class="status-badge">PAID</span>
+            </div>
+            
+            <div class="receipt-row" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <span class="receipt-label">Payment ID</span>
+                <span class="receipt-value">{{ payment_id }}</span>
+            </div>
+            
+            <div class="receipt-row" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <span class="receipt-label">Order ID</span>
+                <span class="receipt-value">{{ order_id }}</span>
+            </div>
+        </div>
+
+        <!-- Shop Button -->
+        <a href="/user/products" class="shop-btn">
+            <i class="ph ph-shopping-bag" style="font-size: 1.2rem;"></i> Continue Shopping
+        </a>
+
+    </div>
+</div>
+{% endblock %}

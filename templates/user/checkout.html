@@ -1,0 +1,279 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}Select Shipping Address - SmartCart{% endblock %}
+
+{% block content %}
+<style>
+    .checkout-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px 0;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .checkout-card {
+        background: #ffffff;
+        color: #333333;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin-top: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 8px;
+    }
+
+    .form-label span {
+        color: #dc3545;
+        margin-left: 2px;
+    }
+
+    .checkout-input {
+        width: 100%;
+        padding: 12px 16px;
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        color: #212529;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .checkout-input:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    .grid-row-three {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .save-btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 8px;
+        background: #198754;
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        margin-top: 10px;
+    }
+
+    .save-btn:hover {
+        background: #157347;
+    }
+
+    /* Saved Address styles matching screenshot */
+    .saved-addr-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 20px;
+        background: #ffffff;
+        margin-bottom: 15px;
+        transition: border-color 0.2s;
+    }
+
+    .saved-addr-card:hover {
+        border-color: rgba(13, 110, 253, 0.5);
+    }
+
+    .saved-btn-edit {
+        background: #ffc107;
+        color: #212529;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: opacity 0.2s;
+    }
+
+    .saved-btn-delete {
+        background: #dc3545;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: opacity 0.2s;
+    }
+
+    .saved-btn-edit:hover, .saved-btn-delete:hover {
+        opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+        .grid-row-three {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+        }
+    }
+</style>
+
+<div class="checkout-container">
+    
+    <!-- Centered Header -->
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.5px;">Select Shipping Address</h2>
+    </div>
+
+    <!-- Form Card -->
+    <div class="checkout-card">
+        
+        <!-- SAVED ADDRESSES SECTION -->
+        <div style="margin-bottom: 30px;">
+            <h3 style="font-size: 1.35rem; font-weight: 700; color: #212529; margin-bottom: 20px;">Saved Addresses</h3>
+            
+            <form action="/user/checkout/use-address" method="POST">
+                {% for addr in saved_addresses %}
+                <div class="saved-addr-card">
+                    <div style="display: flex; align-items: flex-start; gap: 15px;">
+                        <!-- Radio selection matching screenshot -->
+                        <input type="radio" name="selected_address_id" value="{{ addr.id }}" {% if loop.first %}checked{% endif %} 
+                               style="width: 18px; height: 18px; margin-top: 3px; accent-color: #0d6efd; cursor: pointer;">
+                        
+                        <div style="flex: 1; text-align: left;">
+                            <!-- Header name and phone -->
+                            <div style="font-size: 1.05rem; font-weight: 700; color: #212529; margin-bottom: 4px;">
+                                {{ addr.full_name }} <span style="font-weight: 400; color: #6c757d; margin: 0 4px;">|</span> <span style="font-weight: 600; color: #495057;">{{ addr.phone }}</span>
+                            </div>
+                            <!-- Address full details -->
+                            <div style="font-size: 0.95rem; color: #495057; line-height: 1.6; margin-bottom: 12px;">
+                                {{ user.email }}, {{ addr.address }}, {{ addr.landmark }}, {{ addr.city }}, {{ addr.district }}, {{ addr.state }} - {{ addr.pincode }}, {{ addr.country }}
+                            </div>
+                            
+                            <!-- Badges -->
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" onclick='populateAddressForm({{ addr|tojson }})' class="saved-btn-edit">
+                                    Edit
+                                </button>
+                                <a href="/user/address/delete/{{ addr.id }}" class="saved-btn-delete">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Use Selected Address Button -->
+                <button type="submit" style="width: 100%; padding: 14px; border-radius: 8px; background: #0d6efd; border: none; color: #ffffff; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: background 0.2s ease; margin-top: 10px;"
+                        onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                    Use Selected Address
+                </button>
+            </form>
+        </div>
+
+        <!-- Divider Line -->
+        <hr style="border: 0; border-top: 1.5px solid #e9ecef; margin: 35px 0;">
+
+        <!-- ADD NEW ADDRESS FORM -->
+        <div>
+            <h3 id="add-new-address-header" style="font-size: 1.35rem; font-weight: 700; color: #212529; margin-bottom: 25px;">Add New Address</h3>
+
+            <form action="/user/checkout" method="POST">
+                
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label class="form-label">Full Name<span>*</span></label>
+                    <input type="text" id="name-input" name="full_name" value="{{ user.name if user else '' }}" required class="checkout-input" placeholder="Enter your full name">
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label class="form-label">Phone Number<span>*</span></label>
+                    <input type="tel" id="phone-input" name="phone" required class="checkout-input" placeholder="Enter your phone number">
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                    <label class="form-label">Address<span>*</span></label>
+                    <input type="text" id="address-input" name="address" required class="checkout-input" placeholder="Street Address, P.O. Box, Company Name">
+                </div>
+
+                <!-- Landmark, City, District Row -->
+                <div class="grid-row-three form-group">
+                    <div>
+                        <label class="form-label">Landmark<span>*</span></label>
+                        <input type="text" id="landmark-input" name="landmark" required class="checkout-input" placeholder="e.g. Near Station">
+                    </div>
+                    <div>
+                        <label class="form-label">City<span>*</span></label>
+                        <input type="text" id="city-input" name="city" required class="checkout-input" placeholder="City name">
+                    </div>
+                    <div>
+                        <label class="form-label">District<span>*</span></label>
+                        <input type="text" id="district-input" name="district" required class="checkout-input" placeholder="District name">
+                    </div>
+                </div>
+
+                <!-- State, Country, Pincode Row -->
+                <div class="grid-row-three form-group">
+                    <div>
+                        <label class="form-label">State<span>*</span></label>
+                        <input type="text" id="state-input" name="state" required class="checkout-input" placeholder="State name">
+                    </div>
+                    <div>
+                        <label class="form-label">Country</label>
+                        <input type="text" id="country-input" name="country" value="India" readonly class="checkout-input" style="background: #e9ecef; cursor: not-allowed; color: #495057;">
+                    </div>
+                    <div>
+                        <label class="form-label">Pincode<span>*</span></label>
+                        <input type="text" id="pincode-input" name="pincode" required class="checkout-input" placeholder="6-digit Pincode" pattern="[0-9]{6}">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="save-btn">
+                    Save New Address & Continue
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function populateAddressForm(addr) {
+    if (!addr) return;
+    
+    document.getElementById('name-input').value = addr.full_name || '';
+    document.getElementById('phone-input').value = addr.phone || '';
+    document.getElementById('address-input').value = addr.address || '';
+    document.getElementById('landmark-input').value = addr.landmark || '';
+    document.getElementById('city-input').value = addr.city || '';
+    document.getElementById('district-input').value = addr.district || '';
+    document.getElementById('state-input').value = addr.state || '';
+    document.getElementById('pincode-input').value = addr.pincode || '';
+    
+    // Smooth scroll down to the "Add New Address" header
+    const header = document.getElementById('add-new-address-header');
+    if (header) {
+        header.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+{% endblock %}

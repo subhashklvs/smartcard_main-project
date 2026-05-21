@@ -1,0 +1,238 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}Complete Your Payment - SmartCart{% endblock %}
+
+{% block content %}
+<style>
+    .payment-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .payment-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .payment-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(13, 110, 253, 0.1);
+        border: 2px dashed #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0d6efd;
+        font-size: 2.5rem;
+        margin-bottom: 25px;
+    }
+
+    .payment-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .payment-subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+
+    .invoice-box {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .invoice-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+    .invoice-label {
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .invoice-value {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .invoice-order-id {
+        font-family: 'Courier New', Courier, monospace;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    .amount-display {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0d6efd;
+        text-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
+    }
+
+    .rzp-btn {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        background: #0d6efd;
+        border: none;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    .rzp-btn:hover {
+        background: #0b5ed7;
+        box-shadow: 0 6px 20px rgba(13, 110, 253, 0.5);
+        transform: translateY(-1px);
+    }
+
+    .security-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="payment-container">
+    <div class="payment-card">
+        
+        <!-- Payment Icon -->
+        <div class="payment-icon">
+            <i class="ph ph-shield-check"></i>
+        </div>
+
+        <!-- Headers -->
+        <h2 class="payment-title">Complete Your Payment</h2>
+        <p class="payment-subtitle">Please review your order details below and proceed to complete your secure payment transaction.</p>
+
+        <!-- Detailed Invoice -->
+        <div class="invoice-box">
+            <div class="invoice-row">
+                <span class="invoice-label">Order ID</span>
+                <span class="invoice-value invoice-order-id">{{ order_id }}</span>
+            </div>
+            
+            <div class="invoice-row" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <span class="invoice-label">Gateway Provider</span>
+                <span class="invoice-value" style="color: #528ff0; font-weight: 700;">Razorpay</span>
+            </div>
+            
+            <div class="invoice-row" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <span class="invoice-label">Status</span>
+                <span class="invoice-value" style="color: #ffc107; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                    <i class="ph ph-circle-notch" style="animation: spin 1.5s linear infinite;"></i> Awaiting Payment
+                </span>
+            </div>
+
+            <div class="invoice-row" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <span class="invoice-label" style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Total Amount</span>
+                <span class="amount-display">₹{{ amount }}</span>
+            </div>
+        </div>
+
+        <!-- Razorpay CTA Button -->
+        <button id="rzp-button" class="rzp-btn">
+            <i class="ph ph-credit-card" style="font-size: 1.3rem;"></i> Pay Now with Razorpay
+        </button>
+
+        <!-- Security Badge -->
+        <div class="security-badge">
+            <i class="ph ph-lock-key" style="font-size: 1rem;"></i> 256-bit SSL Secure Checkout
+        </div>
+
+    </div>
+</div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "{{ key_id }}",
+    "amount": "{{ amount * 100 }}",  // in paise
+    "currency": "INR",
+    "name": "SmartCart",
+    "description": "Order Payment",
+    "order_id": "{{ order_id }}",
+    "handler": function (response){
+        // Build a small form and POST to server for verification
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/verify-payment";
+
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
+        };
+
+        for (var name in fields) {
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = fields[name];
+            form.appendChild(input);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+    "theme": {
+        "color": "#0d6efd"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('rzp-button').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}

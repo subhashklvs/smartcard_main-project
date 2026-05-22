@@ -179,11 +179,18 @@
                 <i class="ph ph-arrow-left" style="font-size: 1.1rem;"></i> Back to Dashboard
             </a>
             
-            <!-- Update Profile -->
-            <button type="submit" class="btn btn-primary" style="padding: 12px 28px; border-radius: 12px; background: #0d6efd; border: none; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: background 0.2s;"
-                    onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
-                <i class="ph ph-checks" style="font-size: 1.1rem;"></i> Update Profile
-            </button>
+            <div style="display: flex; gap: 15px;">
+                <!-- Delete Profile -->
+                <a href="/user/delete-account" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone and you will lose all orders and cart data.');" style="padding: 12px 28px; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <i class="ph ph-trash" style="font-size: 1.1rem;"></i> Delete Profile
+                </a>
+
+                <!-- Update Profile -->
+                <button type="submit" class="btn btn-primary" style="padding: 12px 28px; border-radius: 12px; background: #0d6efd; border: none; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: background 0.2s;"
+                        onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                    <i class="ph ph-checks" style="font-size: 1.1rem;"></i> Update Profile
+                </button>
+            </div>
         </div>
 
     </form>

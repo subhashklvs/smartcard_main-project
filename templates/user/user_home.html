@@ -3,19 +3,237 @@
 {% block title %}Dashboard - SmartCart{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: 0 auto;">
-    <div class="card glass-effect" style="padding: 40px; margin-bottom: 30px; text-align: center;">
-        <i class="ph-fill ph-user-circle" style="font-size: 5rem; color: var(--accent-primary); margin-bottom: 20px;"></i>
-        <h1 style="margin-bottom: 10px;">Welcome, {{ user_name }}!</h1>
-        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px;">Manage your profile and explore the latest products in our shop.</p>
+<div style="max-width: 1500px; margin: 0 auto; padding: 0 20px;">
+    <!-- Welcome Banner -->
+    <div style="padding: 40px; margin-bottom: 40px; text-align: left; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); position: relative; overflow: hidden; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
         
-        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-            <a href="/user/products" class="btn btn-primary" style="padding: 15px 30px; font-size: 1.1rem;">
-                <i class="ph ph-shopping-bag"></i> Browse Products
+        <!-- Background decoration circle -->
+        <div style="position: absolute; right: -50px; top: -50px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.3); border-radius: 50%; filter: blur(50px); pointer-events: none;"></div>
+
+        <!-- Left Content -->
+        <div style="z-index: 2; max-width: 65%;">
+            <h1 style="margin-bottom: 15px; font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: -0.5px;">Welcome, {{ user_name }} <span style="font-size: 1.8rem; display: inline-block; animation: wave 2s infinite; transform-origin: 70% 70%;">👋</span></h1>
+            <p style="color: #cbd5e1; font-size: 1.05rem; margin-bottom: 30px; line-height: 1.6;">Discover trending products, exclusive offers, fast delivery, and a smooth shopping experience.</p>
+            
+            <div style="display: flex; gap: 20px;">
+                <a href="/user/products" style="background: #fbbf24; color: #000; padding: 12px 28px; font-size: 1rem; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: transform 0.2s, background 0.2s; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);" onmouseover="this.style.background='#f59e0b'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#fbbf24'; this.style.transform='translateY(0)';">
+                    <i class="ph ph-shopping-bag" style="font-size: 1.2rem;"></i> Shop Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Content: Profile Picture -->
+        <div style="z-index: 2; display: flex; justify-content: center; align-items: center; padding-right: 20px;">
+            {% if user and user.profile_image %}
+                <div style="width: 170px; height: 170px; border-radius: 50%; overflow: hidden; border: 4px solid #3b82f6; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #0f172a;">
+                    <img src="/static/uploads/user_profiles/{{ user.profile_image }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                </div>
+            {% else %}
+                <i class="ph-fill ph-user-circle" style="font-size: 10rem; color: rgba(255,255,255,0.9); filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));"></i>
+            {% endif %}
+        </div>
+    </div>
+    
+    <style>
+        @keyframes wave {
+            0% { transform: rotate( 0.0deg) }
+            10% { transform: rotate(14.0deg) }  
+            20% { transform: rotate(-8.0deg) }
+            30% { transform: rotate(14.0deg) }
+            40% { transform: rotate(-4.0deg) }
+            50% { transform: rotate(10.0deg) }
+            60% { transform: rotate( 0.0deg) }
+            100% { transform: rotate( 0.0deg) }
+        }
+    </style>
+
+    <!-- Shop by Category Section -->
+    <div style="margin-bottom: 40px; text-align: left;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px;">Shop by Category</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <a href="/user/products?category=Mobiles" style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px 20px; text-align: center; text-decoration: none; color: var(--text-main); transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="width: 80px; height: 80px; border-radius: 18px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);">
+                    <i class="ph ph-device-mobile" style="font-size: 2.5rem; color: #fff;"></i>
+                </div>
+                <h4 style="margin: 0; font-size: 1.2rem; font-weight: 600;">Mobiles</h4>
             </a>
-            <a href="/user-logout" class="btn btn-danger-outline" style="padding: 15px 30px; font-size: 1.1rem;">
-                <i class="ph ph-sign-out"></i> Logout
+            <a href="/user/products?category=Electronics" style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px 20px; text-align: center; text-decoration: none; color: var(--text-main); transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="width: 80px; height: 80px; border-radius: 18px; background: linear-gradient(135deg, #3b82f6, #6366f1); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);">
+                    <i class="ph ph-laptop" style="font-size: 2.5rem; color: #fff;"></i>
+                </div>
+                <h4 style="margin: 0; font-size: 1.2rem; font-weight: 600;">Electronics</h4>
             </a>
+            <a href="/user/products?category=Accessories" style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px 20px; text-align: center; text-decoration: none; color: var(--text-main); transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="width: 80px; height: 80px; border-radius: 18px; background: linear-gradient(135deg, #8b5cf6, #d946ef); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);">
+                    <i class="ph ph-watch" style="font-size: 2.5rem; color: #fff;"></i>
+                </div>
+                <h4 style="margin: 0; font-size: 1.2rem; font-weight: 600;">Accessories</h4>
+            </a>
+            <a href="/user/products?category=Fashion" style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px 20px; text-align: center; text-decoration: none; color: var(--text-main); transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="width: 80px; height: 80px; border-radius: 18px; background: linear-gradient(135deg, #ec4899, #8b5cf6); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4);">
+                    <i class="ph ph-tote" style="font-size: 2.5rem; color: #fff;"></i>
+                </div>
+                <h4 style="margin: 0; font-size: 1.2rem; font-weight: 600;">Fashion</h4>
+            </a>
+        </div>
+    </div>
+
+    <!-- Special Offers Section -->
+    <div style="margin-bottom: 50px; text-align: left;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px;">Special Offers</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <!-- Offer Card 1 -->
+            <div style="background: #d1e8ff; border-radius: 20px; padding: 30px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; position: relative; min-height: 190px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)';" onmouseout="this.style.transform='scale(1)';">
+                <div style="z-index: 2; max-width: 60%;">
+                    <h3 style="color: #0f172a; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; text-shadow: none;">Electronics Sale</h3>
+                    <p style="color: #334155; font-size: 0.95rem; margin-bottom: 15px; font-weight: 500;">Up to 60% off on gadgets.</p>
+                    <a href="/user/products?category=Electronics" style="display: inline-block; background: #1e293b; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.3s;" onmouseover="this.style.background='#0f172a';" onmouseout="this.style.background='#1e293b';">Explore</a>
+                </div>
+                <!-- Image placeholder matching screenshot -->
+                <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40%; background: url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+            </div>
+
+            <!-- Offer Card 2 -->
+            <div style="background: #fce7f3; border-radius: 20px; padding: 30px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; position: relative; min-height: 190px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)';" onmouseout="this.style.transform='scale(1)';">
+                <div style="z-index: 2; max-width: 60%;">
+                    <h3 style="color: #0f172a; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; text-shadow: none;">Fashion Deals</h3>
+                    <p style="color: #334155; font-size: 0.95rem; margin-bottom: 15px; font-weight: 500;">Latest styles from ₹299.</p>
+                    <a href="/user/products?category=Fashion" style="display: inline-block; background: #1e293b; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.3s;" onmouseover="this.style.background='#0f172a';" onmouseout="this.style.background='#1e293b';">Shop</a>
+                </div>
+                <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40%; background: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400&auto=format&fit=crop') center/top cover;"></div>
+            </div>
+
+            <!-- Offer Card 3 -->
+            <div style="background: #fef08a; border-radius: 20px; padding: 30px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; position: relative; min-height: 190px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)';" onmouseout="this.style.transform='scale(1)';">
+                <div style="z-index: 2; max-width: 60%;">
+                    <h3 style="color: #0f172a; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; text-shadow: none;">Home Essentials</h3>
+                    <p style="color: #334155; font-size: 0.95rem; margin-bottom: 15px; font-weight: 500;">Upgrade your home today.</p>
+                    <a href="/user/products?category=Home" style="display: inline-block; background: #1e293b; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.3s;" onmouseover="this.style.background='#0f172a';" onmouseout="this.style.background='#1e293b';">View</a>
+                </div>
+                <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40%; background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+            </div>
+
+        </div>
+    </div>    <!-- Trending Products Section -->
+    <div style="margin-bottom: 50px; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 1.6rem; font-weight: 700; margin: 0; letter-spacing: -0.5px;">Trending Products</h2>
+            <a href="/user/products" style="padding: 6px 16px; border-radius: 20px; border: 1px solid var(--accent-primary); color: var(--accent-primary); font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='var(--accent-primary)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--accent-primary)';">View All</a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+            
+            <!-- Trending Card 1 -->
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="height: 175px; background: url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+                <div style="padding: 18px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">Smartphone</h3>
+                    <div style="color: #f59e0b; font-size: 0.85rem; margin-bottom: 12px;">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star-half"></i>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
+                        <span style="color: #10b981; font-weight: 700; font-size: 1.1rem;">₹14,999</span>
+                        <span style="color: var(--text-muted); text-decoration: line-through; font-size: 0.85rem;">₹19,999</span>
+                    </div>
+                    <a href="/user/products" style="display: block; width: 100%; text-align: center; background: #0d6efd; color: #fff; padding: 10px 0; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                        <i class="ph ph-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trending Card 2 -->
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="height: 175px; background: url('https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+                <div style="padding: 18px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">Smart Watch</h3>
+                    <div style="color: #f59e0b; font-size: 0.85rem; margin-bottom: 12px;">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph ph-star"></i>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
+                        <span style="color: #10b981; font-weight: 700; font-size: 1.1rem;">₹2,499</span>
+                        <span style="color: var(--text-muted); text-decoration: line-through; font-size: 0.85rem;">₹4,999</span>
+                    </div>
+                    <a href="/user/products" style="display: block; width: 100%; text-align: center; background: #0d6efd; color: #fff; padding: 10px 0; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                        <i class="ph ph-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trending Card 3 -->
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="height: 175px; background: url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+                <div style="padding: 18px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">Headphones</h3>
+                    <div style="color: #f59e0b; font-size: 0.85rem; margin-bottom: 12px;">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star-half"></i>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
+                        <span style="color: #10b981; font-weight: 700; font-size: 1.1rem;">₹1,299</span>
+                        <span style="color: var(--text-muted); text-decoration: line-through; font-size: 0.85rem;">₹2,999</span>
+                    </div>
+                    <a href="/user/products" style="display: block; width: 100%; text-align: center; background: #0d6efd; color: #fff; padding: 10px 0; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                        <i class="ph ph-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trending Card 4 -->
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="height: 175px; background: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+                <div style="padding: 18px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">Sports Shoes</h3>
+                    <div style="color: #f59e0b; font-size: 0.85rem; margin-bottom: 12px;">
+                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph ph-star"></i>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px;">
+                        <span style="color: #10b981; font-weight: 700; font-size: 1.1rem;">₹1,999</span>
+                        <span style="color: var(--text-muted); text-decoration: line-through; font-size: 0.85rem;">₹3,999</span>
+                    </div>
+                    <a href="/user/products" style="display: block; width: 100%; text-align: center; background: #0d6efd; color: #fff; padding: 10px 0; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#0b5ed7';" onmouseout="this.style.background='#0d6efd';">
+                        <i class="ph ph-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div style="margin-bottom: 50px; text-align: left;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                    <i class="ph ph-truck" style="font-size: 1.6rem; color: #3b82f6;"></i>
+                </div>
+                <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 700;">Fast Delivery</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Quick shipping on all orders.</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                    <i class="ph ph-shield-check" style="font-size: 1.6rem; color: #3b82f6;"></i>
+                </div>
+                <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 700;">Secure Payment</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Safe and trusted checkout.</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                    <i class="ph ph-arrows-clockwise" style="font-size: 1.6rem; color: #3b82f6;"></i>
+                </div>
+                <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 700;">Easy Returns</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Simple return process.</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                    <i class="ph ph-headset" style="font-size: 1.6rem; color: #3b82f6;"></i>
+                </div>
+                <h4 style="margin: 0 0 8px 0; font-size: 1.05rem; font-weight: 700;">24/7 Support</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">We are here to help.</p>
+            </div>
+
         </div>
     </div>
 
@@ -25,16 +243,16 @@
             <h3>Products</h3>
             <p>Explore our full catalog</p>
         </a>
-        <div class="card glass-effect stat-card">
+        <a href="/user/my-orders" class="card glass-effect stat-card">
             <i class="ph ph-receipt"></i>
             <h3>Orders</h3>
-            <p>Coming Soon</p>
-        </div>
-        <div class="card glass-effect stat-card">
+            <p>View your order history</p>
+        </a>
+        <a href="/user/profile" class="card glass-effect stat-card">
             <i class="ph ph-gear"></i>
             <h3>Settings</h3>
             <p>Manage your account</p>
-        </div>
+        </a>
     </div>
 </div>
 {% endblock %}

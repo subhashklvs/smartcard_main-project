@@ -741,6 +741,36 @@ def admin_profile_update():
     flash("Profile updated successfully!", "success")
     return redirect('/admin/profile')
 
+# =================================================================
+# ROUTE 15A: DELETE ADMIN PROFILE
+# =================================================================
+@app.route('/admin/delete-account')
+def admin_delete_account():
+    if 'admin_id' not in session:
+        return redirect('/admin-login')
+
+    admin_id = session['admin_id']
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT profile_image FROM admin WHERE admin_id=%s", (admin_id,))
+    admin = cursor.fetchone()
+    if admin and admin.get('profile_image'):
+        img_path = os.path.join(app.config['ADMIN_UPLOAD_FOLDER'], admin['profile_image'])
+        if os.path.exists(img_path):
+            os.remove(img_path)
+
+    cursor.execute("DELETE FROM admin WHERE admin_id=%s", (admin_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    session.pop('admin_id', None)
+    session.pop('admin_name', None)
+    session.pop('admin_email', None)
+    flash("Admin account deleted.", "success")
+    return redirect('/admin-login')
+
 # ---------------------------------------------------------
 # USER ROUTE 1: USER REGISTRATION (SEND OTP)
 # ---------------------------------------------------------
@@ -858,7 +888,15 @@ def user_home():
     if 'user_id' not in session:
         flash("Please login first!", "danger")
         return redirect('/user-login')
-    return render_template("user/user_home.html", user_name=session['user_name'])
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE user_id=%s", (session['user_id'],))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    return render_template("user/user_home.html", user_name=session['user_name'], user=user)
 
 
 @app.route('/user-dashboard')
@@ -1002,6 +1040,42 @@ def user_profile():
 
     flash("Profile updated successfully!", "success")
     return redirect('/user/profile')
+
+# ---------------------------------------------------------
+# USER ROUTE 9.5: DELETE USER PROFILE
+# ---------------------------------------------------------
+@app.route('/user/delete-account')
+def user_delete_account():
+    if 'user_id' not in session:
+        return redirect('/user-login')
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT profile_image FROM users WHERE user_id=%s", (user_id,))
+    user = cursor.fetchone()
+    if user and user.get('profile_image'):
+        img_path = os.path.join(app.config['USER_UPLOAD_FOLDER'], user['profile_image'])
+        if os.path.exists(img_path):
+            os.remove(img_path)
+
+    cursor.execute("DELETE FROM cart WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM user_addresses WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM order_items WHERE order_id IN (SELECT order_id FROM orders WHERE user_id=%s)", (user_id,))
+    cursor.execute("DELETE FROM orders WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM users WHERE user_id=%s", (user_id,))
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    session.pop('user_id', None)
+    session.pop('user_name', None)
+    session.pop('user_email', None)
+    session.pop('cart', None)
+    flash("User account deleted.", "success")
+    return redirect('/user-login')
 
 # ---------------------------------------------------------
 # USER ROUTE 10: FORGOT PASSWORD (SEND RESET LINK)

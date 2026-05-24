@@ -1,0 +1,338 @@
+{% extends "superadmin/base.html" %}
+
+{% block title %}Super Admin Login - SmartCart{% endblock %}
+
+{% block content %}
+<style>
+    .split-card {
+        display: flex;
+        max-width: 850px;
+        width: 100%;
+        min-height: 540px;
+        margin: 40px auto;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .left-banner {
+        flex: 1;
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e293b 100%);
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #ffffff;
+        position: relative;
+    }
+    
+    .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        align-self: flex-start;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .brand-badge i {
+        font-size: 1.3rem;
+    }
+    
+    .left-banner h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #ffffff;
+        margin-bottom: 12px;
+        text-shadow: none;
+    }
+    
+    .banner-desc {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 25px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    
+    .banner-features {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .feature-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: #ffffff;
+    }
+    
+    .right-form-panel {
+        flex: 1.1;
+        background: #ffffff;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #1e293b;
+    }
+    
+    .brand-logo-right {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+    }
+    
+    .brand-logo-right i {
+        color: #f43f5e;
+        font-size: 1.8rem;
+    }
+    
+    .smartcart-type {
+        font-size: 1.6rem;
+        font-weight: 800;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(90deg, #f43f5e, #8b5cf6, #4f46e5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 0;
+        animation: typing 4s steps(9) infinite;
+        display: inline-block;
+    }
+    
+    .superadmin-badge-text {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    
+    @keyframes typing {
+        0% { width: 0; }
+        40% { width: 9ch; }
+        70% { width: 9ch; }
+        100% { width: 0; }
+    }
+    
+    .form-subtitle {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #64748b;
+        margin: 3px 0 15px 0;
+    }
+    
+    .form-title {
+        text-align: center;
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    
+    .form-desc {
+        text-align: center;
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+    
+    .custom-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+    
+    .custom-form-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 0;
+    }
+    
+    .required {
+        color: #ef4444;
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+    
+    .input-with-icon input {
+        width: 100%;
+        padding: 11px 12px 11px 40px !important;
+        border-radius: 10px !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        font-size: 0.95rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .input-with-icon input:focus {
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
+        outline: none;
+    }
+    
+    .forgot-pwd-wrapper {
+        text-align: right;
+        margin-bottom: 18px;
+        margin-top: -8px;
+    }
+    
+    .forgot-link {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #4f46e5;
+        transition: color 0.3s;
+    }
+    
+    .forgot-link:hover {
+        color: #e11d48;
+        text-decoration: underline;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+        margin-top: 15px;
+    }
+    
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #e11d48, #7c3aed);
+        box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        transform: translateY(-1px);
+    }
+    
+    @media (max-width: 850px) {
+        .split-card {
+            flex-direction: column;
+            border-radius: 20px;
+            margin: 20px auto;
+        }
+        .left-banner {
+            padding: 30px;
+        }
+        .left-banner h2 {
+            font-size: 1.5rem;
+        }
+        .banner-desc {
+            margin-bottom: 20px;
+        }
+        .right-form-panel {
+            padding: 30px;
+        }
+    }
+</style>
+
+<div class="split-card fade-in-up">
+    <!-- Left Banner Column -->
+    <div class="left-banner">
+        <div class="brand-badge">
+            <i class="ph-fill ph-shield-star"></i> SmartCart Super Admin
+        </div>
+        <h2>Welcome to the global dashboard</h2>
+        <p class="banner-desc">Login to your master account to oversee the entire platform, manage administrators, and track system revenue.</p>
+        
+        <div class="banner-features">
+            <div class="feature-item">
+                <span class="feature-icon"><i class="ph-fill ph-users-three"></i></span>
+                <span>Oversee and manage administrators</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"><i class="ph-fill ph-currency-inr"></i></span>
+                <span>Monitor platform financial health</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"><i class="ph-fill ph-globe-hemisphere-west"></i></span>
+                <span>Global visibility across all users and orders</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Form Column -->
+    <div class="right-form-panel">
+        <div class="form-header">
+            <div class="brand-logo-right">
+                <i class="ph-fill ph-shield-star"></i>
+                <span class="smartcart-type">SmartCart</span> <span class="superadmin-badge-text">Super</span>
+            </div>
+            <p class="form-subtitle">Your master dashboard awaits</p>
+            <h1 class="form-title">Master Login</h1>
+            <p class="form-desc">Sign in with your master credentials to continue</p>
+        </div>
+        
+        <form method="POST" action="/superadmin-login">
+            <div class="custom-form-group">
+                <label>Master Email Address <span class="required">*</span></label>
+                <div class="input-with-icon">
+                    <i class="ph ph-envelope-simple"></i>
+                    <input type="email" name="email" placeholder="Enter master email" value="subhashklvs@gmail.com" required>
+                </div>
+            </div>
+            
+            <div class="custom-form-group">
+                <label>Master Password <span class="required">*</span></label>
+                <div class="input-with-icon">
+                    <i class="ph ph-lock"></i>
+                    <input type="password" name="password" placeholder="••••••••" value="123" required>
+                </div>
+            </div>
+            
+            <div class="forgot-pwd-wrapper">
+                <a href="/superadmin/forgot-password" class="forgot-link">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="submit-btn"><i class="ph-bold ph-sign-in"></i> Access Global Dashboard</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

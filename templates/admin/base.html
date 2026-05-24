@@ -21,33 +21,98 @@
 
 <body>
 
+    <!-- Custom Admin Dark Navbar Style -->
+    <style>
+        .admin-dark-nav {
+            background: #1e293b !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0;
+        }
+        .admin-dark-nav .brand {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: none;
+            -webkit-text-fill-color: #ffffff;
+        }
+        .brand-icon-box {
+            background: #2563eb;
+            color: #ffffff;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 1.3rem;
+        }
+        .admin-dark-nav .nav-link {
+            color: #cbd5e1 !important;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+        .admin-dark-nav .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255,255,255,0.05);
+        }
+        .admin-dark-nav .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 10px;
+        }
+        .admin-dark-nav .btn-logout {
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .admin-dark-nav .btn-logout:hover {
+            color: #ffffff;
+        }
+    </style>
+
     <!-- Dynamic Navbar -->
-    <nav class="navbar navbar-expand-lg glass-effect">
+    <nav class="navbar navbar-expand-lg admin-dark-nav">
         <div class="nav-container container">
             <a href="/admin-dashboard" class="brand">
-                <i class="ph-fill ph-shopping-cart"></i> SmartCart
+                <div class="brand-icon-box"><i class="ph-bold ph-shopping-cart"></i></div>
+                Smart Cart
             </a>
             
             <button class="navbar-toggler border-0 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="ph ph-list" style="font-size: 1.8rem; color: var(--text-main);"></i>
+                <i class="ph ph-list" style="font-size: 1.8rem; color: #ffffff;"></i>
             </button>
             
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <div class="nav-links ms-auto">
                     {% if session.get('admin_id') %}
-                    <a href="/admin-dashboard" class="nav-link"><i class="ph ph-squares-four"></i> Dashboard</a>
-                    <a href="/admin/item-list" class="nav-link"><i class="ph ph-list-dashes"></i> Products</a>
-                    <a href="/admin/add-item" class="nav-link"><i class="ph ph-plus-circle"></i> Add Item</a>
-                    <div class="nav-divider"></div>
-                    <a href="/admin/profile" class="nav-link profile-link">
-                        <i class="ph ph-user-circle"></i> {{ session.get('admin_name', 'Profile') }}
+                    <a href="/admin-dashboard" class="nav-link"><i class="ph-bold ph-gauge"></i> Dashboard</a>
+                    <a href="/admin/add-item" class="nav-link"><i class="ph-bold ph-plus-circle"></i> Add Item</a>
+                    <a href="/admin/item-list" class="nav-link"><i class="ph-bold ph-package"></i> View Items</a>
+                    <a href="/admin/orders" class="nav-link"><i class="ph-bold ph-clipboard-text"></i> Orders</a>
+                    <div class="nav-divider d-none d-lg-block"></div>
+                    <a href="/admin/profile" class="nav-link">
+                        <i class="ph-bold ph-user-circle"></i> Hi, {{ session.get('admin_name', 'Admin') }}
                     </a>
-                    <a href="/admin-logout" class="btn btn-danger-outline ms-lg-2"><i class="ph ph-sign-out"></i> Logout</a>
+                    <a href="/admin-logout" class="btn-logout ms-lg-3"><i class="ph-bold ph-sign-out"></i> Logout</a>
                     {% else %}
-                    <a href="/admin-login" class="nav-link"><i class="ph ph-house"></i> Home</a>
-                    <a href="/about" class="nav-link"><i class="ph ph-info"></i> About</a>
-                    <a href="/contact" class="nav-link"><i class="ph ph-envelope"></i> Contact</a>
-                    <div class="nav-divider"></div>
+                    <a href="/user-home" class="nav-link"><i class="ph-bold ph-house"></i> Home</a>
+                    <a href="/about" class="nav-link"><i class="ph-bold ph-info"></i> About</a>
+                    <a href="/contact" class="nav-link"><i class="ph-bold ph-envelope"></i> Contact</a>
+                    <div class="nav-divider d-none d-lg-block"></div>
                     <a href="/admin-login" class="nav-link">Login</a>
                     <a href="/admin-signup" class="btn btn-primary ms-lg-2">Sign Up</a>
                     {% endif %}
@@ -84,8 +149,118 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <p>&copy; 2026 SmartCart Admin Dashboard | Designed with <i class="ph-fill ph-heart"></i></p>
+    <!-- Premium Admin Footer -->
+    <style>
+        .admin-footer {
+            background: #1e293b;
+            color: #cbd5e1;
+            padding: 60px 0 0px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .admin-footer .footer-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .admin-footer h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-footer p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+            max-width: 280px;
+        }
+        .admin-footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .admin-footer ul li {
+            margin-bottom: 12px;
+        }
+        .admin-footer ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .admin-footer ul li a:hover {
+            color: #ffffff;
+        }
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        .social-links a {
+            color: #cbd5e1;
+            font-size: 1.4rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: #ffffff;
+        }
+        @media (max-width: 992px) {
+            .admin-footer .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 576px) {
+            .admin-footer .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <footer class="admin-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4><i class="ph-bold ph-shopping-cart"></i> Smart Cart Admin</h4>
+                <p>Manage your store efficiently. Track products, orders, and performance in one place 🚀</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/admin-dashboard">Dashboard</a></li>
+                    <li><a href="/admin/item-list">Products</a></li>
+                    <li><a href="/admin/orders">Orders</a></li>
+                    <li><a href="/admin/profile">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Management</h4>
+                <ul>
+                    <li><a href="/admin/add-item">Add Product</a></li>
+                    <li><a href="/admin/item-list">Manage Products</a></li>
+                    <li><a href="/admin/orders">Manage Orders</a></li>
+                    <li><a href="/admin-logout">Logout</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="ph-fill ph-facebook-logo"></i></a>
+                    <a href="#"><i class="ph-fill ph-instagram-logo"></i></a>
+                    <a href="#"><i class="ph-bold ph-x-logo"></i></a>
+                    <a href="#"><i class="ph-fill ph-youtube-logo"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #0f172a; margin-top: 40px; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: center; text-align: center; font-size: 0.85rem; color: #718096;">
+                &copy; 2026 SmartCart. Designed and Built by subhashklvs. All Rights Reserved
+            </div>
+        </div>
     </footer>
 
     <!-- Bootstrap Bundle with Popper JS -->

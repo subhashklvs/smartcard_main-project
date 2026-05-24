@@ -1,0 +1,70 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Global Orders{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #fff; font-weight: 800; margin: 0;">Global Order Tracking</h2>
+</div>
+
+<div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover mb-0" style="color: #cbd5e1; width: 100%; --bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.05);">
+            <thead style="background: rgba(15, 23, 42, 0.8); border-bottom: 2px solid rgba(255,255,255,0.05);">
+                <tr>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Order ID</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Customer</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Payment ID</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Amount</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Payment</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Order Status</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 20px; vertical-align: middle; color: #fff; font-weight: 700;">#{{ order.order_id }}</td>
+                    <td style="padding: 20px; vertical-align: middle;">
+                        <div style="font-weight: 600; color: #fff;">{{ order.user_name or 'Unknown User' }}</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">{{ order.user_email }}</div>
+                    </td>
+                    <td style="padding: 20px; vertical-align: middle; font-family: monospace; font-size: 0.9rem; color: #ffffff;">
+                        {{ order.razorpay_payment_id }}
+                    </td>
+                    <td style="padding: 20px; vertical-align: middle; color: #34d399; font-weight: 700;">₹{{ order.amount }}</td>
+                    <td style="padding: 20px; vertical-align: middle;">
+                        {% if order.payment_status == 'paid' %}
+                            <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;"><i class="ph-bold ph-check-circle"></i> Paid</span>
+                        {% else %}
+                            <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;"><i class="ph-bold ph-clock"></i> {{ order.payment_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 20px; vertical-align: middle;">
+                        <form action="/superadmin/order/update-status/{{ order.order_id }}" method="POST" class="d-flex align-items-center gap-2">
+                            <select name="order_status" class="form-select form-select-sm" style="background: rgba(15, 23, 42, 0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; width: auto;" onchange="this.form.submit()">
+                                <option value="Pending" {% if order.order_status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Success" {% if order.order_status == 'Success' %}selected{% endif %}>Success</option>
+                                <option value="Packed" {% if order.order_status == 'Packed' %}selected{% endif %}>Packed</option>
+                                <option value="Shipped" {% if order.order_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                <option value="Cancelled" {% if order.order_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td style="padding: 20px; vertical-align: middle; color: #94a3b8; font-size: 0.85rem; max-width: 250px; word-wrap: break-word;">
+                        {{ order.shipping_address or 'No address provided' }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center" style="padding: 40px;">
+                        <i class="ph-fill ph-receipt" style="font-size: 3rem; color: #475569; margin-bottom: 15px; display: block;"></i>
+                        <span style="color: #94a3b8;">No orders have been recorded yet.</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Super Admin Dashboard{% endblock %}
+{% block content %}
+
+<style>
+    .super-header {
+        margin-bottom: 40px;
+    }
+    .super-title {
+        color: #ffffff;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+    .super-subtitle {
+        color: #cbd5e1;
+        font-size: 1.1rem;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    .stat-card {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px 25px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        background: rgba(30, 41, 59, 0.8);
+    }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #f43f5e, #8b5cf6);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        color: #8b5cf6;
+        margin-bottom: 15px;
+    }
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 5px;
+    }
+    .stat-label {
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    .action-card {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .action-card:hover {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: rgba(139, 92, 246, 0.3);
+    }
+    .action-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+    }
+    .action-info h4 {
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .action-info p {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+</style>
+
+<div class="super-header">
+    <h1 class="super-title">Master Overview</h1>
+    <p class="super-subtitle">Monitor and control the entire SmartCart ecosystem.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <i class="ph-fill ph-users-three stat-icon" style="color: #3b82f6;"></i>
+        <div class="stat-value">{{ stats.admins }}</div>
+        <div class="stat-label">Active Admins</div>
+    </div>
+    
+    <div class="stat-card">
+        <i class="ph-fill ph-user-circle stat-icon" style="color: #10b981;"></i>
+        <div class="stat-value">{{ stats.users }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    
+    <div class="stat-card">
+        <i class="ph-fill ph-package stat-icon" style="color: #f59e0b;"></i>
+        <div class="stat-value">{{ stats.products }}</div>
+        <div class="stat-label">Products Listed</div>
+    </div>
+    
+    <div class="stat-card">
+        <i class="ph-fill ph-shopping-cart stat-icon" style="color: #ef4444;"></i>
+        <div class="stat-value">{{ stats.orders }}</div>
+        <div class="stat-label">Total Orders</div>
+    </div>
+    
+    <div class="stat-card" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <div class="stat-label mb-2">Total Platform Revenue</div>
+            <div class="stat-value" style="font-size: 3.5rem; color: #10b981;">₹{{ stats.revenue }}</div>
+        </div>
+        <i class="ph-fill ph-chart-line-up" style="font-size: 6rem; color: rgba(16, 185, 129, 0.2);"></i>
+    </div>
+</div>
+
+<h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;">Quick Management</h3>
+<div class="action-grid">
+    <a href="/superadmin/admins" class="action-card">
+        <div class="action-icon"><i class="ph-bold ph-shield"></i></div>
+        <div class="action-info">
+            <h4>Manage Admins</h4>
+            <p>View and manage platform administrators.</p>
+        </div>
+    </a>
+    
+    <a href="/superadmin/products" class="action-card">
+        <div class="action-icon" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24;"><i class="ph-bold ph-tag"></i></div>
+        <div class="action-info">
+            <h4>Global Inventory</h4>
+            <p>Monitor all products across the platform.</p>
+        </div>
+    </a>
+    
+    <a href="/superadmin/orders" class="action-card">
+        <div class="action-icon" style="background: rgba(239, 68, 68, 0.1); color: #f87171;"><i class="ph-bold ph-receipt"></i></div>
+        <div class="action-info">
+            <h4>Order Tracking</h4>
+            <p>View global order history and status.</p>
+        </div>
+    </a>
+    
+    <a href="/superadmin/revenue" class="action-card">
+        <div class="action-icon" style="background: rgba(16, 185, 129, 0.1); color: #34d399;"><i class="ph-bold ph-currency-inr"></i></div>
+        <div class="action-info">
+            <h4>Financial Reports</h4>
+            <p>Analyze platform revenue and growth.</p>
+        </div>
+    </a>
+</div>
+
+{% endblock %}

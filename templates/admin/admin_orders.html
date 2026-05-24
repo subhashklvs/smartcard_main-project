@@ -1,0 +1,132 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Orders{% endblock %}
+{% block content %}
+
+<style>
+    body {
+        /* Ensuring it arbs the dark theme from global */
+    }
+    .orders-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .orders-header h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+    }
+    .orders-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+    }
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .orders-table th {
+        background: #f8fafc;
+        padding: 15px;
+        text-align: left;
+        font-weight: 700;
+        color: #64748b;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .orders-table td {
+        padding: 15px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #0f172a;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+    .orders-table tr:hover td {
+        background: #f8fafc;
+    }
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+    .status-paid {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+    .status-pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .user-name {
+        font-weight: 700;
+    }
+    .user-email {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+    .amount {
+        font-weight: 700;
+        color: #2563eb;
+    }
+</style>
+
+<div class="fade-in-up">
+    <div class="orders-header">
+        <h2>Manage Orders</h2>
+    </div>
+
+    <div class="orders-card">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Razorpay ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.order_id }}</td>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">{{ order.user_name or 'Guest' }}</span>
+                            <span class="user-email">{{ order.user_email or 'N/A' }}</span>
+                        </div>
+                    </td>
+                    <td><span style="font-family: monospace; font-size: 0.9rem;">{{ order.razorpay_order_id }}</span></td>
+                    <td class="amount">₹{{ order.amount }}</td>
+                    <td>
+                        {% if order.payment_status == 'paid' %}
+                            <span class="badge-status status-paid"><i class="ph-bold ph-check-circle"></i> Paid</span>
+                        {% else %}
+                            <span class="badge-status status-pending"><i class="ph-bold ph-clock"></i> {{ order.payment_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="color: #64748b; font-size: 0.9rem;">{{ order.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">
+                        <i class="ph-fill ph-shopping-bag" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px; display: block;"></i>
+                        No orders have been placed yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

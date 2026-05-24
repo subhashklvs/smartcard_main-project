@@ -87,6 +87,43 @@ def init_user_tables():
 
 init_user_tables()
 
+def init_superadmin_table():
+    """Create superadmins table if it doesn't exist and add default superadmin."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS superadmins (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    
+    cursor.execute("SELECT * FROM superadmins WHERE email = %s", ("subhashklvs@gmail.com",))
+    if not cursor.fetchone():
+        hashed_pw = bcrypt.hashpw("123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        cursor.execute("INSERT INTO superadmins (email, password) VALUES (%s, %s)", ("subhashklvs@gmail.com", hashed_pw))
+        conn.commit()
+        
+    cursor.close()
+    conn.close()
+
+init_superadmin_table()
+
+def create_superadmin_password_reset_token(superadmin):
+    return password_reset_serializer.dumps(
+        {"superadmin_id": superadmin["id"], "email": superadmin["email"]},
+        salt="superadmin-password-reset"
+    )
+
+def verify_superadmin_password_reset_token(token):
+    return password_reset_serializer.loads(
+        token,
+        salt="superadmin-password-reset",
+        max_age=PASSWORD_RESET_MAX_AGE
+    )
 
 def create_password_reset_token(admin):
     return password_reset_serializer.dumps(
@@ -428,8 +465,8 @@ def add_item():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO products (name, description, category, price, image) VALUES (%s, %s, %s, %s, %s)",
-        (name, description, category, price, filename)
+        "INSERT INTO products (name, description, category, price, image, admin_id) VALUES (%s, %s, %s, %s, %s, %s)",
+        (name, description, category, price, filename, session['admin_id'])
     )
     conn.commit()
     cursor.close()
@@ -642,6 +679,36 @@ def delete_item(item_id):
     conn.close()
 
     return redirect('/admin/item-list')
+
+
+# ---------------------------------------------------------
+# ROUTE 14: VIEW ALL ORDERS
+# ---------------------------------------------------------
+@app.route('/admin/orders')
+def admin_orders():
+    if 'admin_id' not in session:
+        flash("Please login first!", "danger")
+        return redirect('/admin-login')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        query = """
+            SELECT o.*, u.name as user_name, u.email as user_email
+            FROM orders o
+            LEFT JOIN users u ON o.user_id = u.user_id
+            ORDER BY o.created_at DESC
+        """
+        cursor.execute(query)
+        orders = cursor.fetchall()
+        return render_template('admin/admin_orders.html', orders=orders)
+    except Exception as e:
+        flash(f"Error fetching orders: {e}", "danger")
+        return render_template('admin/admin_orders.html', orders=[])
+    finally:
+        cursor.close()
+        conn.close()
 
 ADMIN_UPLOAD_FOLDER = 'static/uploads/admin_profiles'
 app.config['ADMIN_UPLOAD_FOLDER'] = ADMIN_UPLOAD_FOLDER
@@ -1829,6 +1896,297 @@ def download_invoice(order_id):
     response.headers['Content-Disposition'] = f"attachment; filename=invoice_{order_id}.pdf"
 
     return response
+
+# =========================================================
+# SUPER ADMIN MODULE
+# =========================================================
+
+@app.route('/superadmin-login', methods=['GET', 'POST'])
+def superadmin_login():
+    if 'superadmin_id' in session:
+        return redirect('/superadmin-dashboard')
+        
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM superadmins WHERE email = %s", (email,))
+        superadmin = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if superadmin and bcrypt.checkpw(password.encode('utf-8'), superadmin['password'].encode('utf-8')):
+            session['superadmin_id'] = superadmin['id']
+            session['superadmin_email'] = superadmin['email']
+            flash("Welcome Super Admin!", "success")
+            return redirect('/superadmin-dashboard')
+        else:
+            flash("Invalid email or password", "danger")
+            
+    return render_template('superadmin/login.html')
+
+
+@app.route('/superadmin-logout')
+def superadmin_logout():
+    session.pop('superadmin_id', None)
+    session.pop('superadmin_email', None)
+    flash("Logged out successfully", "success")
+    return redirect('/superadmin-login')
+
+
+@app.route('/superadmin/forgot-password', methods=['GET', 'POST'])
+def superadmin_forgot_password():
+    if request.method == 'GET':
+        return render_template("superadmin/forgot_password.html")
+
+    email = request.form['email']
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, email FROM superadmins WHERE email=%s", (email,))
+    superadmin = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if superadmin:
+        try:
+            token = create_superadmin_password_reset_token(superadmin)
+            reset_link = url_for('superadmin_reset_password', token=token, _external=True)
+
+            message = Message(
+                subject="SmartCart Super Admin Password Reset",
+                sender=config.MAIL_USERNAME,
+                recipients=[superadmin['email']]
+            )
+            message.body = (
+                f"Hello Super Admin,\n\n"
+                "Click the link below to reset your SmartCart master password:\n"
+                f"{reset_link}\n\n"
+                "This link will expire in 1 hour.\n\n"
+                "If you did not request this, please ignore this email."
+            )
+            mail.send(message)
+
+            flash("Password reset link has been sent to your master email address.", "success")
+            return redirect('/superadmin/forgot-password')
+        except Exception as e:
+            flash(f"Error sending email: {str(e)}", "danger")
+            return redirect('/superadmin/forgot-password')
+    else:
+        flash("Email not found. Please check your master email.", "danger")
+        return redirect('/superadmin/forgot-password')
+
+    return redirect('/superadmin-login')
+
+
+@app.route('/superadmin/reset-password/<token>', methods=['GET', 'POST'])
+def superadmin_reset_password(token):
+    try:
+        reset_data = verify_superadmin_password_reset_token(token)
+        superadmin_email = reset_data['email']
+    except SignatureExpired:
+        flash("The password reset link has expired. Please request a new one.", "danger")
+        return redirect('/superadmin/forgot-password')
+    except BadSignature:
+        flash("Invalid reset link. Please request a new password reset link.", "danger")
+        return redirect('/superadmin/forgot-password')
+
+    if request.method == 'GET':
+        return render_template("superadmin/reset_password.html", token=token)
+
+    password = request.form['password']
+    confirm_password = request.form['confirm_password']
+
+    if password != confirm_password:
+        flash("Passwords do not match. Please try again.", "danger")
+        return redirect(f'/superadmin/reset-password/{token}')
+
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE superadmins SET password=%s WHERE email=%s", (hashed_pw, superadmin_email))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("Your master password has been updated successfully! You can now login.", "success")
+    return redirect('/superadmin-login')
+
+
+@app.route('/superadmin-dashboard')
+def superadmin_dashboard():
+    if 'superadmin_id' not in session:
+        flash("Please login first!", "danger")
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Get stats
+    cursor.execute("SELECT COUNT(*) as count FROM admin")
+    admins_count = cursor.fetchone()['count']
+    
+    cursor.execute("SELECT COUNT(*) as count FROM users")
+    users_count = cursor.fetchone()['count']
+    
+    cursor.execute("SELECT COUNT(*) as count FROM products")
+    products_count = cursor.fetchone()['count']
+    
+    cursor.execute("SELECT COUNT(*) as count FROM orders")
+    orders_count = cursor.fetchone()['count']
+    
+    cursor.execute("SELECT SUM(amount) as total FROM orders WHERE payment_status='paid'")
+    revenue_res = cursor.fetchone()
+    total_revenue = revenue_res['total'] if revenue_res and revenue_res['total'] else 0
+    
+    cursor.close()
+    conn.close()
+    
+    stats = {
+        'admins': admins_count,
+        'users': users_count,
+        'products': products_count,
+        'orders': orders_count,
+        'revenue': total_revenue
+    }
+    
+    return render_template('superadmin/dashboard.html', stats=stats)
+
+
+@app.route('/superadmin/admins')
+def superadmin_admins():
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM admin")
+    admins = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return render_template('superadmin/admins.html', admins=admins)
+
+@app.route('/superadmin/admin/approve/<int:admin_id>', methods=['POST'])
+def superadmin_approve_admin(admin_id):
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE admin SET status = 'approved' WHERE admin_id = %s", (admin_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+    flash("Administrator has been approved successfully.", "success")
+    return redirect('/superadmin/admins')
+
+@app.route('/superadmin/admin/reject/<int:admin_id>', methods=['POST'])
+def superadmin_reject_admin(admin_id):
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE admin SET status = 'rejected' WHERE admin_id = %s", (admin_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+    flash("Administrator has been rejected.", "danger")
+    return redirect('/superadmin/admins')
+
+
+@app.route('/superadmin/products')
+def superadmin_products():
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT p.*, a.name as admin_name 
+        FROM products p 
+        LEFT JOIN admin a ON p.admin_id = a.admin_id
+    """)
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return render_template('superadmin/products.html', products=products)
+
+
+@app.route('/superadmin/orders')
+def superadmin_orders():
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT o.*, u.name as user_name, u.email as user_email
+        FROM orders o
+        LEFT JOIN users u ON o.user_id = u.user_id
+        ORDER BY o.created_at DESC
+    """)
+    orders = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return render_template('superadmin/orders.html', orders=orders)
+
+
+@app.route('/superadmin/order/update-status/<int:order_id>', methods=['POST'])
+def superadmin_update_order_status(order_id):
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+    
+    new_status = request.form.get('order_status')
+    if new_status in ['Pending', 'Success', 'Packed', 'Shipped', 'Cancelled']:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE orders SET order_status = %s WHERE order_id = %s", (new_status, order_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash(f"Order #{order_id} status updated to {new_status}.", "success")
+    else:
+        flash("Invalid status selected.", "danger")
+        
+    return redirect('/superadmin/orders')
+
+
+@app.route('/superadmin/revenue')
+def superadmin_revenue():
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    # Group revenue by date
+    cursor.execute("""
+        SELECT DATE(created_at) as date, SUM(amount) as daily_revenue 
+        FROM orders 
+        WHERE payment_status='paid' 
+        GROUP BY DATE(created_at) 
+        ORDER BY DATE(created_at) DESC
+        LIMIT 30
+    """)
+    revenue_data = cursor.fetchall()
+    
+    cursor.execute("SELECT SUM(amount) as total FROM orders WHERE payment_status='paid'")
+    total_res = cursor.fetchone()
+    total_revenue = total_res['total'] if total_res and total_res['total'] else 0
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('superadmin/revenue.html', revenue_data=revenue_data, total_revenue=total_revenue)
+
 
 # ------------------------- RUN APP ------------------------
 if __name__ == '__main__':

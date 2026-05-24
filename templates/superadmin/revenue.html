@@ -1,0 +1,41 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Financial Reports{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #fff; font-weight: 800; margin: 0;">Financial Reports & Revenue</h2>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 20px; padding: 40px; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <i class="ph-fill ph-currency-inr" style="font-size: 4rem; color: #10b981; margin-bottom: 20px;"></i>
+            <h3 style="color: #cbd5e1; font-size: 1.2rem; margin-bottom: 10px;">Total Platform Revenue</h3>
+            <div style="font-size: 4rem; font-weight: 800; color: #10b981; line-height: 1;">₹{{ total_revenue }}</div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; height: 100%;">
+            <h4 style="color: #fff; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">Recent Daily Revenue</h4>
+            
+            <div style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
+                {% for row in revenue_data %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="color: #cbd5e1; font-weight: 500;">
+                        <i class="ph-bold ph-calendar-blank" style="margin-right: 8px; color: #8b5cf6;"></i>
+                        {{ row.date }}
+                    </div>
+                    <div style="color: #34d399; font-weight: 700;">₹{{ row.daily_revenue }}</div>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p>No revenue data recorded yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

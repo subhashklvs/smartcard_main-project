@@ -1,28 +1,655 @@
 {% extends "admin/base.html" %}
 {% block title %}Admin Dashboard{% endblock %}
 {% block content %}
+
+<style>
+    /* Global Background Override Removed to match User Theme */
+
+    /* Enterprise Banner */
+    .ent-banner {
+        background: #273142;
+        border-radius: 20px 20px 0 0;
+        padding: 50px;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+    }
+    .ent-banner::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 300px;
+        height: 300px;
+        background: rgba(37, 99, 235, 0.2);
+        border-radius: 50%;
+    }
+    .ent-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .ent-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        letter-spacing: -0.5px;
+    }
+    .ent-desc {
+        color: #cbd5e1;
+        font-size: 1.05rem;
+        max-width: 600px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+    .ent-actions {
+        display: flex;
+        gap: 15px;
+    }
+    .btn-ent-primary {
+        background: #ffffff;
+        color: #2563eb;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: transform 0.2s;
+    }
+    .btn-ent-primary:hover {
+        transform: translateY(-2px);
+    }
+    .btn-ent-secondary {
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    .btn-ent-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Blue Strip */
+    .ent-strip {
+        background: #2563eb;
+        border-radius: 0 0 20px 20px;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        margin-bottom: 50px;
+    }
+    .strip-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Section Headers */
+    .section-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #ffffff; /* Adjusted for dark theme */
+        margin-bottom: 5px;
+    }
+    .section-subtitle {
+        color: #cbd5e1; /* Adjusted for dark theme */
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    /* Overview Cards */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+    .overview-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        position: relative;
+        text-decoration: none;
+        display: block;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .overview-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+    .oc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    .oc-icon {
+        width: 45px;
+        height: 45px;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+    .oc-pill {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .oc-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 5px;
+    }
+    .oc-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    /* Fast Operations Banner */
+    .fast-ops {
+        background: #1e293b;
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 50px;
+        box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+    }
+    .fast-ops-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-bottom: 20px;
+    }
+    .fast-ops h3 {
+        color: #ffffff;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        max-width: 600px;
+    }
+    .fast-ops p {
+        color: #94a3b8;
+        font-size: 1rem;
+        margin-bottom: 30px;
+        max-width: 500px;
+    }
+    .btn-fast {
+        display: block;
+        width: 100%;
+        background: #ffffff;
+        color: #0f172a;
+        text-align: center;
+        padding: 15px;
+        border-radius: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+    .btn-fast:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+
+    /* Module Cards */
+    .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+    .module-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .mc-icon {
+        width: 50px;
+        height: 50px;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+    .mc-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+    .mc-desc {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 30px;
+        flex-grow: 1;
+    }
+    .mc-btn {
+        background: #2563eb;
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 12px;
+        text-align: center;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.3s;
+        display: inline-block;
+    }
+    .mc-btn:hover {
+        background: #1d4ed8;
+        color: #ffffff;
+    }
+
+    /* Quick Actions */
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+    .qa-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        text-decoration: none;
+        display: block;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .qa-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+    }
+    .qa-icon {
+        width: 45px;
+        height: 45px;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    .qa-title {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+    .qa-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    /* Priorities & Performance Split */
+    .split-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+    @media (max-width: 992px) {
+        .split-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .split-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+    }
+    .split-card h3 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+    .split-card p.split-sub {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    /* Priorities List */
+    .priority-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .priority-list li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+        position: relative;
+        padding-left: 20px;
+    }
+    .priority-list li:last-child {
+        border-bottom: none;
+    }
+    .priority-list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 22px;
+        width: 8px;
+        height: 8px;
+        background: #2563eb;
+        border-radius: 50%;
+    }
+    .priority-title {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        display: block;
+    }
+    .priority-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    /* Performance Bars */
+    .perf-item {
+        margin-bottom: 25px;
+    }
+    .perf-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #0f172a;
+    }
+    .perf-bar-bg {
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .perf-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+    }
+    .pb-blue { background: #2563eb; width: 85%; }
+    .pb-green { background: #16a34a; width: 72%; }
+    .pb-yellow { background: #eab308; width: 90%; }
+    
+    .btn-review {
+        background: #2563eb;
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 10px;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+    .btn-review:hover {
+        background: #1d4ed8;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .ent-banner { padding: 30px; }
+        .ent-title { font-size: 2rem; }
+        .ent-strip { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .fast-ops { padding: 30px; }
+        .fast-ops h3 { font-size: 1.8rem; }
+    }
+</style>
+
 <div class="fade-in-up">
-    <h2>Welcome, <span style="color: var(--accent-primary);">{{ admin_name }}</span></h2>
-    <p class="mb-4">This is your admin dashboard. Use the quick links below to manage your system.</p>
 
-    <div class="dashboard-grid">
-        <a href="/admin/item-list" class="card stat-card">
-            <i class="ph-fill ph-list-numbers"></i>
-            <h3>View All Products</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Manage inventory and product details.</p>
+    <!-- Enterprise Administration Dashboard Banner -->
+    <div class="ent-banner">
+        <div class="ent-badge">
+            <i class="ph-bold ph-shield-check"></i> Enterprise Administration Dashboard
+        </div>
+        <h1 class="ent-title">Welcome, {{ session.get('admin_name', 'Admin') }}</h1>
+        <p class="ent-desc">Manage products, orders, categories, customers, and administration workflow through a premium corporate dashboard.</p>
+        <div class="ent-actions">
+            <a href="/admin/item-list" class="btn-ent-primary">
+                <i class="ph-bold ph-package"></i> Manage Products
+            </a>
+            <a href="/admin/orders" class="btn-ent-secondary">
+                <i class="ph-bold ph-clipboard-text"></i> View Orders
+            </a>
+        </div>
+    </div>
+    <div class="ent-strip">
+        <div class="strip-item">
+            <i class="ph-bold ph-sparkle"></i> Maintain premium product listings for better customer experience.
+        </div>
+        <div class="strip-item">
+            <i class="ph-bold ph-shield-check"></i> Secure admin access and avoid sharing credentials.
+        </div>
+    </div>
+
+    <!-- Business Overview -->
+    <h2 class="section-title">Business Overview</h2>
+    <p class="section-subtitle">Corporate-level summary of your ecommerce administration.</p>
+
+    <div class="overview-grid">
+        <a href="/admin/item-list" class="overview-card">
+            <div class="oc-header">
+                <div class="oc-icon"><i class="ph-fill ph-package"></i></div>
+                <div class="oc-pill">+12%</div>
+            </div>
+            <div class="oc-title">Products</div>
+            <p class="oc-desc">Manage active product listings</p>
         </a>
 
-        <a href="/admin/add-item" class="card stat-card">
-            <i class="ph-fill ph-plus-circle"></i>
-            <h3>Add Product</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Quickly insert a new item to your store.</p>
+        <a href="/admin/orders" class="overview-card">
+            <div class="oc-header">
+                <div class="oc-icon"><i class="ph-fill ph-shopping-bag"></i></div>
+                <div class="oc-pill">+18%</div>
+            </div>
+            <div class="oc-title">Orders</div>
+            <p class="oc-desc">Track customer purchases</p>
         </a>
 
-        <a href="/admin/profile" class="card stat-card">
-            <i class="ph-fill ph-user-gear"></i>
-            <h3>Edit Profile</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Update your admin credentials & image.</p>
+        <a href="/admin/manage-customers" class="overview-card">
+            <div class="oc-header">
+                <div class="oc-icon"><i class="ph-fill ph-users"></i></div>
+                <div class="oc-pill">+9%</div>
+            </div>
+            <div class="oc-title">Customers</div>
+            <p class="oc-desc">Monitor user activity</p>
+        </a>
+
+        <a href="/admin-dashboard" class="overview-card">
+            <div class="oc-header">
+                <div class="oc-icon"><i class="ph-fill ph-currency-inr"></i></div>
+                <div class="oc-pill">+24%</div>
+            </div>
+            <div class="oc-title">Revenue</div>
+            <p class="oc-desc">Analyze sales performance</p>
         </a>
     </div>
+
+    <!-- Fast Operations -->
+    <div class="fast-ops">
+        <div class="fast-ops-badge"><i class="ph-bold ph-lightning"></i> Fast Operations</div>
+        <h3>Update orders and product status quickly.</h3>
+        <p>Keep your ecommerce workflow smooth with quick access to order management and product controls.</p>
+        <a href="/admin/orders" class="btn-fast">Check Orders</a>
+    </div>
+
+    <!-- Administration Modules -->
+    <h2 class="section-title">Administration Modules</h2>
+    <p class="section-subtitle">Access important ecommerce management sections.</p>
+
+    <div class="modules-grid">
+        <div class="module-card">
+            <div class="mc-icon"><i class="ph-bold ph-plus-square"></i></div>
+            <h3 class="mc-title">Add Products</h3>
+            <p class="mc-desc">Add new products with price, category, image, and stock information.</p>
+            <a href="/admin/add-item" class="mc-btn">Add Product</a>
+        </div>
+
+        <div class="module-card">
+            <div class="mc-icon"><i class="ph-bold ph-cubes"></i></div>
+            <h3 class="mc-title">Manage Products</h3>
+            <p class="mc-desc">Edit, update, or remove existing products from your ecommerce store.</p>
+            <a href="/admin/item-list" class="mc-btn">Manage Products</a>
+        </div>
+
+        <div class="module-card">
+            <div class="mc-icon"><i class="ph-bold ph-receipt"></i></div>
+            <h3 class="mc-title">Manage Orders</h3>
+            <p class="mc-desc">View customer orders, payment details, delivery status, and invoices.</p>
+            <a href="/admin/orders" class="mc-btn">View Orders</a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">Quick Actions</h2>
+    <p class="section-subtitle">Use shortcuts to handle common admin tasks faster.</p>
+
+    <div class="quick-actions-grid">
+        <a href="/admin/item-list" class="qa-card">
+            <div class="qa-icon"><i class="ph-bold ph-squares-four"></i></div>
+            <h3 class="qa-title">Categories</h3>
+            <p class="qa-desc">Organize products into clean categories.</p>
+        </a>
+        <a href="/admin/manage-customers" class="qa-card">
+            <div class="qa-icon"><i class="ph-bold ph-user-list"></i></div>
+            <h3 class="qa-title">Users</h3>
+            <p class="qa-desc">Check registered customer accounts.</p>
+        </a>
+        <a href="/admin/profile" class="qa-card">
+            <div class="qa-icon"><i class="ph-bold ph-user-gear"></i></div>
+            <h3 class="qa-title">Admin Profile</h3>
+            <p class="qa-desc">Update your personal admin details.</p>
+        </a>
+        <a href="/admin-logout" class="qa-card">
+            <div class="qa-icon"><i class="ph-bold ph-sign-out"></i></div>
+            <h3 class="qa-title">Logout</h3>
+            <p class="qa-desc">Securely exit the admin dashboard.</p>
+        </a>
+    </div>
+
+    <!-- Priorities and Performance Split Section -->
+    <div class="split-grid">
+        <!-- Priorities -->
+        <div class="split-card">
+            <h3>Recent Admin Priorities</h3>
+            <p class="split-sub">Recommended actions for a professional ecommerce workflow.</p>
+            <ul class="priority-list">
+                <li>
+                    <span class="priority-title">Update product stock availability</span>
+                    <p class="priority-desc">Keep inventory accurate to avoid order issues.</p>
+                </li>
+                <li>
+                    <span class="priority-title">Review pending customer orders</span>
+                    <p class="priority-desc">Process new orders quickly for better customer satisfaction.</p>
+                </li>
+                <li>
+                    <span class="priority-title">Improve product images and descriptions</span>
+                    <p class="priority-desc">Professional listings increase customer trust.</p>
+                </li>
+                <li>
+                    <span class="priority-title">Monitor pricing and offers</span>
+                    <p class="priority-desc">Maintain competitive pricing across all categories.</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Performance -->
+        <div class="split-card">
+            <h3>Store Performance</h3>
+            <p class="split-sub">Premium ecommerce administration summary.</p>
+            
+            <div class="perf-item">
+                <div class="perf-header">
+                    <span>Product Management</span>
+                    <span>85%</span>
+                </div>
+                <div class="perf-bar-bg">
+                    <div class="perf-bar-fill pb-blue"></div>
+                </div>
+            </div>
+
+            <div class="perf-item">
+                <div class="perf-header">
+                    <span>Order Processing</span>
+                    <span>72%</span>
+                </div>
+                <div class="perf-bar-bg">
+                    <div class="perf-bar-fill pb-green"></div>
+                </div>
+            </div>
+
+            <div class="perf-item" style="margin-bottom: 30px;">
+                <div class="perf-header">
+                    <span>Customer Experience</span>
+                    <span>90%</span>
+                </div>
+                <div class="perf-bar-bg">
+                    <div class="perf-bar-fill pb-yellow"></div>
+                </div>
+            </div>
+
+            <a href="/admin-dashboard" class="btn-review">Review Store Activity</a>
+        </div>
+    </div>
+
 </div>
+
 {% endblock %}

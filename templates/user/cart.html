@@ -5,13 +5,13 @@
 {% block content %}
 <div style="max-width: 1250px; margin: 0 auto; padding: 20px 0;">
     
-    <h2 style="font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 25px; letter-spacing: -0.5px;">Your Cart</h2>
+    <h2 style="font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 25px; letter-spacing: -0.5px;">Your Cart</h2>
 
     {% if not cart %}
         <!-- Empty Cart State -->
         <div style="text-align: center; padding: 60px 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 16px; backdrop-filter: blur(20px);">
             <i class="ph ph-shopping-cart-simple" style="font-size: 5rem; color: var(--text-muted); margin-bottom: 20px; display: block;"></i>
-            <h3 style="color: #fff; margin-bottom: 10px; font-size: 1.5rem; font-weight: 600;">Your cart is empty.</h3>
+            <h3 style="color: #ffffff; margin-bottom: 10px; font-size: 1.5rem; font-weight: 600;">Your cart is empty.</h3>
             <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 1rem;">Looks like you haven't added anything to your cart yet.</p>
             <a href="/user/products" class="btn btn-primary" style="padding: 12px 30px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block;">Shop Now</a>
         </div>
@@ -56,9 +56,9 @@
                             <!-- Quantity Controls -->
                             <td style="padding: 15px;">
                                 <div style="display: inline-flex; align-items: center; gap: 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 4px 8px;">
-                                    <a href="/user/cart/decrease/{{ pid }}" style="width: 24px; height: 24px; border-radius: 4px; background: #0d6efd; color: #fff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 1.1rem; line-height: 1;">-</a>
+                                    <a href="/user/cart/decrease/{{ pid }}" style="width: 24px; height: 24px; border-radius: 4px; background: #0d6efd; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 1.1rem; line-height: 1;">-</a>
                                     <span style="font-weight: 600; color: #212529; font-size: 1rem; min-width: 15px; display: inline-block;">{{ item.quantity }}</span>
-                                    <a href="/user/cart/increase/{{ pid }}" style="width: 24px; height: 24px; border-radius: 4px; background: #0d6efd; color: #fff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 1.1rem; line-height: 1;">+</a>
+                                    <a href="/user/cart/increase/{{ pid }}" style="width: 24px; height: 24px; border-radius: 4px; background: #0d6efd; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 1.1rem; line-height: 1;">+</a>
                                 </div>
                             </td>
                             <!-- Item Total -->

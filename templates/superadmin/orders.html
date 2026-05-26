@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 style="color: #fff; font-weight: 800; margin: 0;">Global Order Tracking</h2>
+    <h2 style="color: #ffffff; font-weight: 800; margin: 0;">Global Order Tracking</h2>
 </div>
 
 <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
@@ -23,10 +23,10 @@
             <tbody>
                 {% for order in orders %}
                 <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <td style="padding: 20px; vertical-align: middle; color: #fff; font-weight: 700;">#{{ order.order_id }}</td>
+                    <td style="padding: 20px; vertical-align: middle; color: #ffffff; font-weight: 700;">#{{ order.order_id }}</td>
                     <td style="padding: 20px; vertical-align: middle;">
-                        <div style="font-weight: 600; color: #fff;">{{ order.user_name or 'Unknown User' }}</div>
-                        <div style="font-size: 0.8rem; color: #64748b;">{{ order.user_email }}</div>
+                        <div style="font-weight: 600; color: #ffffff;">{{ order.user_name or 'Unknown User' }}</div>
+                        <div style="font-size: 0.8rem; color: #cbd5e1;">{{ order.user_email }}</div>
                     </td>
                     <td style="padding: 20px; vertical-align: middle; font-family: monospace; font-size: 0.9rem; color: #ffffff;">
                         {{ order.razorpay_payment_id }}
@@ -41,7 +41,7 @@
                     </td>
                     <td style="padding: 20px; vertical-align: middle;">
                         <form action="/superadmin/order/update-status/{{ order.order_id }}" method="POST" class="d-flex align-items-center gap-2">
-                            <select name="order_status" class="form-select form-select-sm" style="background: rgba(15, 23, 42, 0.6); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; width: auto;" onchange="this.form.submit()">
+                            <select name="order_status" class="form-select form-select-sm" style="background: rgba(15, 23, 42, 0.6); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; width: auto;" onchange="this.form.submit()">
                                 <option value="Pending" {% if order.order_status == 'Pending' %}selected{% endif %}>Pending</option>
                                 <option value="Success" {% if order.order_status == 'Success' %}selected{% endif %}>Success</option>
                                 <option value="Packed" {% if order.order_status == 'Packed' %}selected{% endif %}>Packed</option>

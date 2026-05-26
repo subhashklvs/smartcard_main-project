@@ -45,7 +45,7 @@
 .sc-search-btn {
     flex-shrink: 0 !important;
     background: #6366f1 !important;
-    color: #fff !important;
+    color: #ffffff !important;
     border: none !important;
     border-radius: 999px !important;
     padding: 9px 26px !important;
@@ -63,7 +63,7 @@
 <div style="display: flex; align-items: center; margin-bottom: 28px; gap: 0;">
 
     <!-- Left: Page Title -->
-    <h2 style="font-size: 1.9rem; font-weight: 700; color: #fff; margin: 0; letter-spacing: -0.4px; white-space: nowrap; flex-shrink: 0;">All Products</h2>
+    <h2 style="font-size: 1.9rem; font-weight: 700; color: #ffffff; margin: 0; letter-spacing: -0.4px; white-space: nowrap; flex-shrink: 0;">All Products</h2>
 
     <!-- Centre: Search Bar -->
     <form method="GET" action="/user/products" class="sc-search-wrap">
@@ -80,11 +80,11 @@
     <!-- Right: Category Filter -->
     <form method="GET" action="/user/products" style="margin: 0; flex-shrink: 0;">
         <select name="category" onchange="this.form.submit()"
-            style="padding: 10px 16px; background: #1a1d2e; border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 0.92rem; cursor: pointer; outline: none;">
-            <option value="" style="background: #1a1d2e; color: #fff;">All Categories</option>
+            style="padding: 10px 16px; background: #1a1d2e; border: 1px solid var(--glass-border); border-radius: 10px; color: #ffffff; font-size: 0.92rem; cursor: pointer; outline: none;">
+            <option value="" style="background: #1a1d2e; color: #ffffff;">All Categories</option>
             {% for cat in categories %}
             <option value="{{ cat.category }}"
-                style="background: #1a1d2e; color: #fff;"
+                style="background: #1a1d2e; color: #ffffff;"
                 {% if request.args.get('category')==cat.category %} selected {% endif %}>
                 {{ cat.category }}
             </option>
@@ -120,7 +120,7 @@
                 style="font-size: 1.2rem; margin-bottom: 10px; min-height: 2.8rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                 {{ product.name }}
             </h3>
-            <p style="font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: auto; margin-bottom: 20px;">
+            <p style="font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-top: auto; margin-bottom: 20px;">
                 ₹{{ product.price }}
             </p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">

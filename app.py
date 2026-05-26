@@ -38,6 +38,19 @@ PASSWORD_RESET_MAX_AGE = 3600
 
 # Dynamic headers, footers, stylesheets, and scripts are fully managed by modern base templates.
 
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 0 seconds.
+    This prevents the "back button" caching issue after logout.
+    """
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+
 # ---------------- DB CONNECTION FUNCTION --------------
 def get_db_connection():
     return mysql.connector.connect(
@@ -365,8 +378,14 @@ def admin_dashboard():
     if 'admin_id' not in session:
         flash("Please login to access the dashboard!", "danger")
         return redirect('/admin-login')
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM admin WHERE admin_id=%s", (session['admin_id'],))
+    admin = cursor.fetchone()
+    cursor.close()
+    conn.close()
 
-    return render_template("admin/dashboard.html", admin_name=session['admin_name'])
+    return render_template("admin/dashboard.html", admin_name=session['admin_name'], admin=admin)
 
 
 @app.route('/admin/admin_dashboard')
@@ -668,10 +687,20 @@ def delete_item(item_id):
         if os.path.exists(image_path):
             os.remove(image_path)
 
-        # Delete product from database
-        cursor.execute("DELETE FROM products WHERE product_id = %s", (item_id,))
-        conn.commit()
-        flash("Product deleted successfully!", "success")
+        try:
+            # Remove from carts first to prevent basic foreign key errors
+            cursor.execute("DELETE FROM cart WHERE product_id = %s", (item_id,))
+            
+            # Now attempt to delete the product
+            cursor.execute("DELETE FROM products WHERE product_id = %s", (item_id,))
+            conn.commit()
+            flash("Product deleted successfully!", "success")
+        except mysql.connector.Error as err:
+            conn.rollback()
+            if err.errno == 1451: # Cannot delete a parent row
+                flash("Cannot delete this product because it has already been ordered by customers.", "danger")
+            else:
+                flash(f"Database error: {err}", "danger")
     else:
         flash("Product not found!", "danger")
 
@@ -1872,18 +1901,33 @@ def download_invoice(order_id):
                    (order_id, session['user_id']))
     order = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM order_items WHERE order_id=%s", (order_id,))
+    if not order:
+        cursor.close()
+        conn.close()
+        flash("Order not found.", "danger")
+        return redirect('/user/my-orders')
+
+    # Fetch joined items
+    cursor.execute("""
+        SELECT oi.*, p.image, p.category, p.description 
+        FROM order_items oi
+        LEFT JOIN products p ON oi.product_id = p.product_id
+        WHERE oi.order_id = %s
+    """, (order_id,))
     items = cursor.fetchall()
+
+    # Fetch user details
+    cursor.execute("SELECT * FROM users WHERE user_id=%s", (session['user_id'],))
+    user = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    if not order:
-        flash("Order not found.", "danger")
-        return redirect('/user/my-orders')
+    import os
+    product_images_dir = os.path.abspath(os.path.join(app.root_path, 'static', 'uploads', 'product_images'))
 
     # Render invoice HTML
-    html = render_template("user/invoice.html", order=order, items=items)
+    html = render_template("user/invoice.html", order=order, items=items, user=user, product_images_dir=product_images_dir)
 
     pdf = generate_pdf(html)
     if not pdf:

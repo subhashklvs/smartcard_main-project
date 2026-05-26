@@ -40,7 +40,7 @@
         }
         .brand-icon-super {
             background: linear-gradient(135deg, #f43f5e, #8b5cf6);
-            color: #ffffff;
+            color: #000000;
             width: 40px;
             height: 40px;
             display: flex;
@@ -84,7 +84,7 @@
         }
         .superadmin-nav .btn-logout:hover {
             background: #ef4444;
-            color: #ffffff;
+            color: #000000;
         }
     </style>
 
@@ -97,7 +97,7 @@
                 Super Admin
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#superadminNav" style="border-color: rgba(255,255,255,0.2);">
-                <i class="ph-bold ph-list" style="color: #fff; font-size: 1.5rem;"></i>
+                <i class="ph-bold ph-list" style="color: #ffffff; font-size: 1.5rem;"></i>
             </button>
             <div class="collapse navbar-collapse" id="superadminNav">
                 <div class="navbar-nav ms-auto align-items-center gap-2">
@@ -121,11 +121,11 @@
     <!-- Main Content Area -->
     <main class="main-content" style="flex-grow: 1; min-height: calc(100vh - 180px);">
         <!-- Flash Messages -->
-        <div class="flash-container position-absolute top-0 end-0 p-3" style="z-index: 1050;">
+        <div class="flash-container position-absolute top-0 end-0 p-3" style="z-index: 1050; pointer-events: none;">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
-            <div class="alert alert-{{ category }} fade-in shadow-lg">
+            <div class="alert alert-{{ category }} fade-in shadow-lg" style="pointer-events: auto;">
                 {% if category == 'success' %}
                 <i class="ph-fill ph-check-circle text-success"></i>
                 {% elif category == 'danger' or category == 'error' %}

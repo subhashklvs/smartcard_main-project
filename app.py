@@ -487,15 +487,20 @@ def add_item():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO products (name, description, category, price, image, admin_id) VALUES (%s, %s, %s, %s, %s, %s)",
-        (name, description, category, price, filename, session['admin_id'])
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+    try:
+        cursor.execute(
+            "INSERT INTO products (name, description, category, price, image, admin_id) VALUES (%s, %s, %s, %s, %s, %s)",
+            (name, description, category, price, filename, session['admin_id'])
+        )
+        conn.commit()
+        flash("Product added successfully!", "success")
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error adding product: {str(e)}", "danger")
+    finally:
+        cursor.close()
+        conn.close()
 
-    flash("Product added successfully!", "success")
     return redirect('/admin/add-item')
 
 # ---------------------------------------------------------

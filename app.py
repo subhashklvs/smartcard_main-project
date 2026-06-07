@@ -748,6 +748,29 @@ def admin_orders():
         cursor.close()
         conn.close()
 
+# =================================================================
+# ROUTE: MANAGE CUSTOMERS
+# =================================================================
+@app.route('/admin/manage-customers')
+def admin_manage_customers():
+    if 'admin_id' not in session:
+        flash("Please login first!", "danger")
+        return redirect('/admin-login')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("SELECT * FROM users ORDER BY created_at DESC")
+        users = cursor.fetchall()
+        return render_template('admin/manage_customers.html', users=users)
+    except Exception as e:
+        flash(f"Error fetching users: {e}", "danger")
+        return render_template('admin/manage_customers.html', users=[])
+    finally:
+        cursor.close()
+        conn.close()
+
 ADMIN_UPLOAD_FOLDER = 'static/uploads/admin_profiles'
 app.config['ADMIN_UPLOAD_FOLDER'] = ADMIN_UPLOAD_FOLDER
 
@@ -2316,4 +2339,4 @@ def superadmin_admin_revenue():
 
 # ------------------------- RUN APP ------------------------
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)

@@ -1,0 +1,105 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Customers{% endblock %}
+{% block content %}
+
+<style>
+    .customers-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .customers-header h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+    }
+    .customers-card {
+        background: rgba(255,255,255,0.03); backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+    }
+    .customers-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .customers-table th {
+        background: rgba(15, 23, 42, 0.8);
+        padding: 15px;
+        text-align: left;
+        font-weight: 700;
+        color: #a78bfa;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    }
+    .customers-table td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        color: #ffffff;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+    .customers-table tr {
+        transition: background 0.2s ease;
+    }
+    .customers-table tr:hover td {
+        background: rgba(255, 255, 255, 0.06);
+    }
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .user-name {
+        font-weight: 700;
+    }
+    .user-email {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+</style>
+
+<div class="fade-in-up">
+    <div class="customers-header">
+        <h2>Registered Customers</h2>
+    </div>
+
+    <div class="customers-card">
+        <table class="customers-table">
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Customer Name</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>#{{ user.user_id }}</td>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">{{ user.name }}</span>
+                        </div>
+                    </td>
+                    <td><span class="user-email">{{ user.email }}</span></td>
+                    <td>{{ user.phone if user.phone else 'N/A' }}</td>
+                    <td style="color: #64748b; font-size: 0.9rem;">{{ user.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+                        <i class="ph-fill ph-users" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px; display: block;"></i>
+                        No customers registered yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

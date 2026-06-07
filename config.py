@@ -5,11 +5,8 @@
 
 SECRET_KEY = "your_secret_key"
 
-# MySQL Database
-DB_HOST = "localhost"
-DB_USER = "root"
-DB_PASSWORD = "Subhashklvs@123"
-DB_NAME = "smartcard_db"
+# SQLite Database
+DB_FILE = "smartcard.sqlite"
 
 # Email SMTP Settings
 MAIL_SERVER = 'smtp.gmail.com'

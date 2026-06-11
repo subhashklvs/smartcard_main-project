@@ -274,7 +274,7 @@ def admin_login():
         flash("Incorrect password! Try again.", "danger")
         return redirect('/admin-login')
 
-    if admin.get('status') != 'approved':
+    if dict(admin).get('status') != 'approved':
         flash("Your account is pending. Please take approval from the superadmin.", "warning")
         return redirect('/admin-login')
 
@@ -881,7 +881,7 @@ def admin_delete_account():
 
     cursor.execute("SELECT profile_image FROM admin WHERE admin_id=?", (admin_id,))
     admin = cursor.fetchone()
-    if admin and admin.get('profile_image'):
+    if admin and dict(admin).get('profile_image'):
         img_path = os.path.join(app.config['ADMIN_UPLOAD_FOLDER'], admin['profile_image'])
         if os.path.exists(img_path):
             os.remove(img_path)
@@ -1135,7 +1135,7 @@ def user_profile():
     else:
         hashed = user['password']
 
-    old_image_name = user.get('profile_image')
+    old_image_name = dict(user).get('profile_image')
 
     # Handle profile image upload
     if new_image and new_image.filename != '':
@@ -1181,7 +1181,7 @@ def user_delete_account():
 
     cursor.execute("SELECT profile_image FROM users WHERE user_id=?", (user_id,))
     user = cursor.fetchone()
-    if user and user.get('profile_image'):
+    if user and dict(user).get('profile_image'):
         img_path = os.path.join(app.config['USER_UPLOAD_FOLDER'], user['profile_image'])
         if os.path.exists(img_path):
             os.remove(img_path)
@@ -1573,6 +1573,8 @@ def checkout():
     cursor.close()
     conn.close()
 
+    saved_addresses = [dict(addr) for addr in saved_addresses]
+
     if request.method == 'GET':
         return render_template("user/checkout.html", user=user, saved_addresses=saved_addresses)
 
@@ -1636,7 +1638,7 @@ def use_saved_address():
     conn.close()
 
     if addr:
-        session['shipping_address'] = addr
+        session['shipping_address'] = dict(addr)
         session.modified = True
 
     return redirect('/user/pay')
@@ -1713,10 +1715,20 @@ def payment_success():
     session.pop('cart', None)
     session.modified = True
 
+    user = None
+    if 'user_id' in session:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE user_id = ?", (session['user_id'],))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
     return render_template(
         "user/payment_success.html",
         payment_id=payment_id,
-        order_id=order_id
+        order_id=order_id,
+        user=user
     )
 
 
@@ -1870,6 +1882,12 @@ def order_success(order_db_id):
     )
     items = cursor.fetchall()
 
+    cursor.execute(
+        "SELECT * FROM users WHERE user_id = ?",
+        (session['user_id'],)
+    )
+    user = cursor.fetchone()
+
     cursor.close()
     conn.close()
 
@@ -1881,7 +1899,8 @@ def order_success(order_db_id):
         "user/order_success.html",
         order=order,
         items=items,
-        shipping=session.get('shipping_address', {})
+        shipping=session.get('shipping_address', {}),
+        user=user
     )
 
 

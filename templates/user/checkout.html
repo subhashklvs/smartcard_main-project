@@ -171,7 +171,7 @@
                             
                             <!-- Badges -->
                             <div style="display: flex; gap: 10px;">
-                                <button type="button" onclick='populateAddressForm({{ addr|tojson }})' class="saved-btn-edit">
+                                <button type="button" data-address='{{ addr|tojson|forceescape }}' onclick='populateAddressForm(JSON.parse(this.getAttribute("data-address")))' class="saved-btn-edit">
                                     Edit
                                 </button>
                                 <a href="/user/address/delete/{{ addr.id }}" class="saved-btn-delete">

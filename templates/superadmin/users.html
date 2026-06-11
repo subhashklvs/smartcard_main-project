@@ -1,0 +1,52 @@
+{% extends "superadmin/base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #ffffff; font-weight: 800; margin: 0;">Registered Platform Users</h2>
+</div>
+
+<div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover mb-0" style="color: #cbd5e1; width: 100%; --bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.05);">
+            <thead style="background: rgba(15, 23, 42, 0.8); border-bottom: 2px solid rgba(255,255,255,0.05);">
+                <tr>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">ID</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Name</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Email Address</th>
+                    <th style="padding: 20px; color: #a78bfa; font-weight: 600;">Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 20px; vertical-align: middle; color: #ffffff;">#{{ user.user_id }}</td>
+                    <td style="padding: 20px; vertical-align: middle; font-weight: 600; color: #ffffff;">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if user.profile_image %}
+                                <img src="/static/uploads/user_profiles/{{ user.profile_image }}" alt="{{ user.name }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                    {{ user.name[0]|upper }}
+                                </div>
+                            {% endif %}
+                            {{ user.name }}
+                        </div>
+                    </td>
+                    <td style="padding: 20px; vertical-align: middle; color: #ffffff;">{{ user.email }}</td>
+                    <td style="padding: 20px; vertical-align: middle; color: #94a3b8; font-size: 0.95rem;">{{ user.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center" style="padding: 40px;">
+                        <i class="ph-fill ph-user-circle" style="font-size: 3rem; color: #475569; margin-bottom: 15px; display: block;"></i>
+                        <span style="color: #94a3b8;">No registered users found.</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -2208,6 +2208,21 @@ def superadmin_admins():
     
     return render_template('superadmin/admins.html', admins=admins)
 
+
+@app.route('/superadmin/users')
+def superadmin_users():
+    if 'superadmin_id' not in session:
+        return redirect('/superadmin-login')
+        
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users ORDER BY created_at DESC")
+    users = [dict(row) for row in cursor.fetchall()]
+    cursor.close()
+    conn.close()
+    
+    return render_template('superadmin/users.html', users=users)
+
 @app.route('/superadmin/admin/approve/<int:admin_id>', methods=['POST'])
 def superadmin_approve_admin(admin_id):
     if 'superadmin_id' not in session:

@@ -162,7 +162,10 @@ def index():
 @app.route('/about')
 def about_page():
     base_template = "user/user_base.html"
-    if 'admin_id' in session or (request.referrer and 'admin' in request.referrer):
+    role = request.args.get('role')
+    if role == 'superadmin' or 'superadmin_id' in session or (request.referrer and 'superadmin' in request.referrer):
+        base_template = "superadmin/base.html"
+    elif role == 'admin' or 'admin_id' in session or (request.referrer and 'admin' in request.referrer):
         base_template = "admin/base.html"
     return render_template("admin/about.html", base_template=base_template)
 
@@ -399,8 +402,11 @@ def old_admin_dashboard():
 # ---------------------------------------------------------
 @app.route('/contact', methods=['GET', 'POST'])
 def contact_page():
+    role = request.args.get('role')
     base_template = "user/user_base.html"
-    if 'admin_id' in session or (request.referrer and 'admin' in request.referrer):
+    if role == 'superadmin' or 'superadmin_id' in session or (request.referrer and 'superadmin' in request.referrer):
+        base_template = "superadmin/base.html"
+    elif role == 'admin' or 'admin_id' in session or (request.referrer and 'admin' in request.referrer):
         base_template = "admin/base.html"
 
     if request.method == 'GET':
@@ -432,7 +438,13 @@ def contact_page():
     except Exception:
         flash("Unable to send your message right now. Please try again later.", "danger")
 
-    return redirect('/contact')
+    role_param = ""
+    if role == 'superadmin' or 'superadmin_id' in session or (request.referrer and 'superadmin' in request.referrer):
+        role_param = "?role=superadmin"
+    elif role == 'admin' or 'admin_id' in session or (request.referrer and 'admin' in request.referrer):
+        role_param = "?role=admin"
+
+    return redirect('/contact' + role_param)
 
 # ---------------------------------------------------------
 # ROUTE 6: ADMIN LOGOUT
